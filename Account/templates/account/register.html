@@ -1,0 +1,165 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+<link href=" {% static "css/info.css" %} " rel="stylesheet">
+
+
+<style>
+  
+.error-message {
+    color: red; 
+}
+
+.error-message.strong {
+    color: green;
+}
+</style>
+
+<div class="containerAccout">
+
+    <div class="sidebar">
+        <h2 class="m-0 animated slideInDown mt-5" > وظائف المستقبل    </h2>
+        <ul class="list-unstyled">
+
+            <li class="animated slideInRight">  ابني مسستقبلك المهني  معنا في موقع وظائف السمتقبل</li>
+            <li class="animated slideInLeft">  قم بالتسجيل الدخول وأنشى السيرة الذاتية الخاص بك </li>
+
+        </ul>
+    </div>
+    <div class="form-section animate__animated">
+        <h4 class="text-center p-3" style="color: #00c482;">إنشاء حساب جديد</h4>
+        <form id="registrationForm" method="POST" novalidate>
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" name="username" id="fullName" placeholder="الاسم كامل" required>
+                <label for="fullName" class="form-label">الاسم كاملاً *</label>
+                <div class="error-message" id="nameError"></div>
+                <span class="error-message">
+                    {% for error in form.username.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </span>
+            </div>
+            
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" name="email" id="email" placeholder="البريد الإلكتروني" required>
+                <label for="email" class="form-label">البريد الإلكتروني *</label>
+                <div class="error-message" id="emailError"></div>
+                <span class="error-message">
+                    {% for error in form.email.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </span>
+            </div>
+        
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" name="password1" id="password" placeholder="كلمة المرور" required>
+                <label for="password" class="form-label">كلمة المرور *</label>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+        
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" name="password2" id="confirmPassword" placeholder="تأكيد كلمة المرور" required>
+                <label for="confirmPassword" class="form-label">تأكيد كلمة المرور *</label>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+        
+            <button type="submit" class="btn btn-primary w-100" id="submitButton">قم بالتسجيل والمتابعة</button>
+            <p class="mt-2">هل لديك حساب <a href="{%  url 'logins' %}" class="" style="color: blue;">سجل الأن</a></p>
+        </form>
+    
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+        <script>
+            $(document).ready(function() {
+                const nameInput = $('#fullName');
+                const passwordInput = $('#password');
+                const confirmPasswordInput = $('#confirmPassword');
+                const submitButton = $('#submitButton');
+                
+                nameInput.on('input', function() {
+                    const nameValue = nameInput.val();
+                    const nameError = $('#nameError');
+                    const regex = /^[a-zA-Zأ-ي\s]*$/;
+                    
+                    if (!regex.test(nameValue)) {
+                        nameError.text('الاسم يجب أن يحتوي فقط على أحرف.');
+                        nameInput.addClass('error');  
+                    } else {
+                        nameError.text('');
+                        nameInput.removeClass('error'); 
+                    }
+                    toggleSubmitButton();
+                });
+                
+                function validatePassword() {
+                    const passwordValue = passwordInput.val();
+                    const passwordError = $('#passwordError');
+                    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                    
+                    if (!regex.test(passwordValue)) {
+                        passwordError.text('كلمة المرور يجب أن تحتوي على حرف كبير وصغير ورقم.');
+                        passwordInput.addClass('error');  
+                    } else {
+                        passwordError.text('');
+                        passwordInput.removeClass('error');  
+                    }
+                    toggleSubmitButton();
+                }
+                
+                passwordInput.on('input', function() {
+                    validatePassword();
+                });
+                
+                confirmPasswordInput.on('input', function() {
+                    const passwordValue = passwordInput.val();
+                    const confirmPasswordValue = confirmPasswordInput.val();
+                    const confirmPasswordError = $('#confirmPasswordError');
+                    
+                    if (confirmPasswordValue !== passwordValue) {
+                        confirmPasswordError.text('كلمة المرور غير متطابقة.');
+                        confirmPasswordInput.addClass('error'); 
+                    } else {
+                        confirmPasswordError.text('');
+                        confirmPasswordInput.removeClass('error');  
+                    }
+                    toggleSubmitButton();
+                });
+                
+                function toggleSubmitButton() {
+                    const isNameValid = /^[a-zA-Zأ-ي\s]*$/.test(nameInput.val());
+                    const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/.test(passwordInput.val());
+                    const isPasswordMatched = passwordInput.val() === confirmPasswordInput.val();
+                    
+                    if (isNameValid && isPasswordValid && isPasswordMatched) {
+                        submitButton.prop('disabled', false).removeClass('disabled'); 
+                    } else {
+                        submitButton.prop('disabled', true).addClass('disabled');  
+                    }
+                }
+            });
+        </script>
+    
+        <style>
+            .btn.disabled {
+                background-color: #d6d6d6;  
+                cursor: not-allowed;
+            }
+    
+            .form-control.error {
+                border-color: red;
+            }
+    
+            .error-message {
+                color: red;
+                font-size: 0.9em;
+            }
+        </style>
+    </div>
+    
+    
+
+
+
+{% endblock  %}

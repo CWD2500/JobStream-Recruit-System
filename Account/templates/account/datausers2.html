@@ -1,0 +1,169 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+ 
+
+<link href=" {% static "css/info.css" %} " rel="stylesheet">
+
+ <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+
+<div class="containerAccout">
+    <div class="sidebar">
+        <h2 class="m-0 animated slideInDown mt-5" > أبني سيرتك الذاتية     </h2>
+        <ul class="list-unstyled">
+          
+            <li class="animated slideInRight">  ابني سيرتك الذاتية لنزيد من فرص عملك</li>
+            <li class="animated slideInLeft">   أحرص ان يحتوي هلى كامل خبرتك المهنية </li>
+            
+        </ul>
+    </div>
+
+    <div class="form-section animate__animated">
+        <h4 class="text-center p-3" style="color: #00c482;">المعلومات الرئيسية</h4>
+
+
+        
+        <form id="multiStepForm" class="form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+
+     
+            <!-- Progress bar -->
+            <div class="progressbar">
+                <div class="progress" id="progress"></div>
+                <div class="progress-step progress-step-active" data-title="المعلومات"></div>
+                <div class="progress-step" data-title="السيرة الذاتية"></div>
+                <div class="progress-step" data-title="صورة"></div>
+            </div>
+    
+            <!-- Steps -->
+            <div class="form-step form-step-active">
+                <div class="form-floating-label"  >
+                    <input type="date" name="data_of_brith" id="databrith"   name="date_of_birth"  placeholder=" " style="direction: rtl;">
+                    <label for="databrith">تاريخ الميلاد</label>
+                </div>
+    
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="gender" id="gender1"  value="male"  checked >
+                        <label class="form-check-label p-1" for="gender1">ذكر</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="gender" id="gender2"  value="female" >
+                        <label class="form-check-label p-1" for="gender2">أنثى</label>
+                    </div>
+                </div>
+    
+                <div class="form-floating-label">
+                    <!-- <label for="nationality">الجنسية</label> -->
+                    <select class="form-control" id="nationality"  name="nationality"  style="background: white;color:black;padding: 10px;">
+                        <option value="" disabled selected>اختر الجنسية</option>
+                        {% for code, name in nationalities %}
+                            <option value="{{ code }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+    
+
+                <div class="form-floating-label"  >
+                    <input type="text"   name="state" id="residence"  placeholder=" " style="direction: rtl;">
+                    <label for="residence">  الدولة</label>
+                </div>
+                {% comment %} <div class="form-floating-label">
+                    <!-- <label for="residence">الدولة المقيمة</label> -->
+                    <select class="form-control select-info-register" id="residence"   style="background: none;padding: 10px;">
+                        <option value="" disabled selected>اختر الدولة</option>
+                        <option value="">الدولة 1</option>
+                        <option value="">الدولة 2</option>
+                        <option value="">الدولة 3</option>
+                        <option value="">الدولة 4</option>
+                        <option value="">الدولة 5</option>
+                    </select>
+                </div> {% endcomment %}
+    
+                {% comment %} <div class="form-floating-label">
+                    <input type="text" class="form-control" id="city"  placeholder=" ">
+                    <label for="city" >المدينة</label>
+                </div> {% endcomment %}
+    
+                <!-- <div class="text-right"> -->
+                    <!-- <a href="#" class="btn btn-next">التالي</a> -->
+                    <button type="button" class="btn btn-primary  btn-next w-100" >  التالي</button>
+
+                <!-- </div> -->
+
+    
+
+
+
+
+
+
+            <div class="form-step">
+                <div class="form-floating-label">
+                    <!-- <label for="language">اللغة التي كتبت بها السيرة الذاتية</label> -->
+                    <select class="form-control" id="language"  style="background: none;padding: 10px;">
+                        <option value="" disabled selected>اختر اللغة</option>
+                        <option value="العربية">العربية</option>
+                        <option value="الإنجليزية">الإنجليزية</option>
+                        <option value="الإسبانية">الإسبانية</option>
+                        <option value="الفرنسية">الفرنسية</option>
+                    </select>
+                </div>
+    
+                <div class="drop-area" id="drop-area">
+                    <i class="fas fa-file-upload"></i>
+                    <p>اسحب الملف هنا أو انقر لاختيار الملف</p>
+                    <input type="file" id="fileElem" name="the_biography" style="display:none;" />
+                    <button type="button" class="btn-upload" onclick="document.getElementById('fileElem').click();">رفع الملف</button>
+                </div>
+    
+                <div class="btns-group">
+                    <!-- <a href="#" class="btn btn-next">التالي</a> -->
+                    <button type="button" class="btn btn-primary  btn-next w-100" >  التالي</button>
+                    <button type="button" class="btn btn-primary  btn-prev w-100" >  السابق</button>
+                    <!-- <a href="#" class="btn btn-prev">السابق</a> -->
+                </div>
+            </div>
+    
+            <div class="form-step">
+                <div class="drop-area" id="drop-area-image" onclick="document.getElementById('imageElem').click();">
+                    <i class="fas fa-user-circle"></i>
+                    <p>انقر هنا لاختيار الصورة</p>
+                    <input type="file" id="imageElem" style="display:none;" accept="image/*"  name="picture"  onchange="handleFile(event)" />
+                </div>
+    
+                <div class="btns-group">
+                       <!--     <a href="#" class="btn btn-prev">السابق</a> -->
+                <button type="submit" class="btn">إرسال</button> 
+                {% comment %} <a href class="btn">إرسال</a>  {% endcomment %}
+                    
+                    <!-- <button type="button" class="btn btn-primary  btn-next w-100" >  التالي</button> -->
+                    <button type="button" class="btn btn-primary  btn-prev w-100" >  السابق</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+  
+ 
+{% endblock  %}

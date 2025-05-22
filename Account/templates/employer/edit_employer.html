@@ -1,0 +1,357 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+    <!-- Navbar Start -->
+    {% include "layouts/navbar.html" %}
+
+<style>
+.custom-card {
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 85rem;
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+}
+
+.form-floating label {
+    position: absolute;
+    top: -15px;
+    right: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000000;
+    /* background-color: white; */
+    padding: 0 10px;
+    transition: 0.3s ease-in-out;
+}
+
+input, select, textarea {
+    border-radius: 8px;
+    padding: 12px;
+    border: 2px solid #ced4da;
+    width: 100%;
+    font-size: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color:  #0dcaf0 !important;
+    box-shadow: 0 0 8px  #0dcaf0 !important;
+}
+
+.btn-warning {
+    background-color:  #0dcaf0 !important;
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-warning:hover {
+    background-color:  #0dcaf0 !important;
+    box-shadow: 0 4px 10px  #0dcaf0 !important;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-secondary:hover {
+    opacity: 0.9;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+    .form-group .form-floating {
+        flex: 1 0 48%;
+        margin-right: 2%;
+    }
+
+    .form-group .form-floating:last-child {
+        margin-right: 0;
+    }
+}
+
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+
+
+</style>
+ <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+    <div class="container-fluid mt-5" style="direction: rtl;">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card custom-card">
+                    <div class="card-header text-white bg-info text-center" style="border-radius: 10px;">
+                        <b>تعديل بيانات صاحب العمل</b>
+                    </div>
+                    <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- الاسم واسم الشركة -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-floating">
+                                    {{ form.name_of_responsible_person }}
+                                    <label for="id_name_of_responsible_person">اسم المسؤول *</label>
+                                </div>
+                                <small class="text-danger"></small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-floating">
+                                    {{ form.company_name }}
+                                    <label for="id_company_name">اسم الشركة *</label>
+                                </div>
+                                <small class="text-danger"></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- البريد والهاتف -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-floating">
+                                    {{ form.email }}
+                                    <label for="id_email">البريد الإلكتروني *</label>
+                                </div>
+                                <small class="text-danger"></small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-floating">
+                                    {{ form.phone_number }}
+                                    <label for="id_phone_number">رقم الهاتف *</label>
+                                </div>
+                                <small class="text-danger"></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الدولة والمحافظة -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-floating">
+                                    {{ form.state }}
+                                    <label for="id_state">الدولة *</label>
+                                </div>
+                                <small class="text-danger"></small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-floating">
+                                    {{ form.governorate }}
+                                    <label for="id_governorate">المحافظة *</label>
+                                </div>
+                                <small class="text-danger"></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الشعار -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                      
+                                    {{ form.logo }}
+                                    <label for="id_logo">شعار الشركة *</label>
+                          
+                                <small class="text-danger"></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- زر الإرسال -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-actions text-center mt-4">
+                                <button id="submitBtn" type="submit" class="btn btn-info w-100" style="border-radius: 10px;">تحديث البيانات</button>                                                </div>
+                        </div>
+                    </div>
+                </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const submitBtn = document.getElementById('submitBtn');
+        const nameInput = document.getElementById('id_name_of_responsible_person');
+        const companyNameInput = document.getElementById('id_company_name');
+        const StateInput = document.getElementById('id_state');
+        const governorateInput = document.getElementById('id_governorate');
+        const emailInput = document.getElementById('id_email');
+        const phoneInput = document.getElementById('id_phone_number');
+        const logoInput = document.getElementById('id_logo');
+
+        const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        const inputs = [nameInput, companyNameInput, emailInput, phoneInput, logoInput, StateInput, governorateInput];
+
+        function validateText(input) {
+            const regex = /^[\u0600-\u06FFa-zA-Z\s]+$/;
+            return regex.test(input.value.trim());
+        }
+
+        function validateEmail(input) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(input.value.trim());
+        }
+
+        function validateNumber(input) {
+            const regex = /^\d{6,15}$/;
+            return regex.test(input.value.trim());
+        }
+
+        function validateImage(input) {
+            if (!input.files.length) return true;
+            const file = input.files[0];
+            return allowedImageTypes.includes(file.type);
+        }
+
+        function showError(input, message) {
+            clearError(input);
+            input.classList.add('is-invalid');
+            const errorElem = input.closest('.form-group').querySelector('small.text-danger');
+            if (errorElem) {
+                errorElem.textContent = message;
+            }
+        }
+
+        function clearError(input) {
+            input.classList.remove('is-invalid');
+            const errorElem = input.closest('.form-group').querySelector('small.text-danger');
+            if (errorElem) {
+                errorElem.textContent = '';
+            }
+        }
+
+        function validateForm() {
+            let isValid = true;
+
+            if (!validateText(nameInput)) {
+                showError(nameInput, 'يرجى إدخال اسم صحيح بدون أرقام أو رموز');
+                isValid = false;
+            } else {
+                clearError(nameInput);
+            }
+
+            if (!validateText(companyNameInput)) {
+                showError(companyNameInput, 'يرجى إدخال اسم شركة صحيح');
+                isValid = false;
+            } else {
+                clearError(companyNameInput);
+            }
+
+            if (!validateEmail(emailInput)) {
+                showError(emailInput, 'يرجى إدخال بريد إلكتروني صالح');
+                isValid = false;
+            } else {
+                clearError(emailInput);
+            }
+
+            if (!validateNumber(phoneInput)) {
+                showError(phoneInput, 'يرجى إدخال رقم هاتف صحيح (بين 6 و15 رقم)');
+                isValid = false;
+            } else {
+                clearError(phoneInput);
+            }
+
+            if (!validateImage(logoInput)) {
+                showError(logoInput, 'يرجى تحميل صورة بصيغة png أو jpg فقط');
+                isValid = false;
+            } else {
+                clearError(logoInput);
+            }
+
+            if (!StateInput.value.trim()) {
+                showError(StateInput, 'يرجى اختيار الدولة');
+                isValid = false;
+            } else {
+                clearError(StateInput);
+            }
+
+            if (!governorateInput.value.trim()) {
+                showError(governorateInput, 'يرجى اختيار المحافظة');
+                isValid = false;
+            } else {
+                clearError(governorateInput);
+            }
+
+
+            if (!validateText(governorateInput)) {
+                showError(governorateInput, 'يرجى إدخال اسم المحافظة صحيح بدون أرقام أو رموز');
+                isValid = false;
+            } else {
+                clearError(governorateInput);
+            }
+
+            
+            if (!validateText(id_state)) {
+                showError(id_state, 'يرجى إدخال اسم الدولة صحيح بدون أرقام أو رموز');
+                isValid = false;
+            } else {
+                clearError(id_state);
+            }
+
+
+            submitBtn.disabled = !isValid;
+            return isValid;
+        }
+
+        inputs.forEach(input => {
+            input.addEventListener('input', validateForm);
+            input.addEventListener('change', validateForm);
+        });
+
+        form.addEventListener('submit', function (e) {
+            if (!validateForm()) {
+                e.preventDefault();
+            }
+        });
+
+        validateForm();
+    });
+
+    </script>
+
+
+
+
+{% endblock  %}

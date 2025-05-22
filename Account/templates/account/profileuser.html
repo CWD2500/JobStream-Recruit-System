@@ -1,0 +1,1795 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+    <!-- Navbar Start -->
+    {% include "layouts/navbar.html" %}
+    <!-- Navbar End -->
+            
+    <style>
+  
+        .modal-content {
+            border-radius: 30px;
+            background: linear-gradient(135deg, #32a852, #81f495);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 5px 15px rgba(50, 200, 100, 0.5);
+            overflow: hidden;
+            animation: slideDown 0.8s ease-out;
+            transform-origin: top center;
+        }
+    
+        @keyframes slideDown {
+            0% {
+                transform: scaleY(0.5) translateY(-200px);
+                opacity: 0;
+            }
+            100% {
+                transform: scaleY(1) translateY(0);
+                opacity: 1;
+            }
+        }
+    
+        .modal-header {
+            background: linear-gradient(90deg, #32a852, #4fdc87);
+            color: white;
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: bold;
+            padding: 20px;
+            letter-spacing: 1px;
+            text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+    
+        .modal-header::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 5px;
+            background: white;
+            border-radius: 10px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+    
+        @keyframes pulse {
+            0%, 100% {
+                width: 50px;
+                opacity: 1;
+            }
+            50% {
+                width: 70px;
+                opacity: 0.7;
+            }
+        }
+    
+        .btn-mode-close {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: white;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+    
+        .btn-mode-close:hover {
+            opacity: 0.7;
+            transform: rotate(180deg) scale(1.1);
+        }
+    
+        .modal-body {
+            padding: 30px 40px;
+            background: #f0fff9;
+            border-top: 5px solid rgba(50, 200, 100, 0.3);
+        }
+    
+        .form-floating {
+            margin-bottom: 25px;
+            position: relative;
+        }
+    
+        .form-floating input,
+        .form-floating textarea,
+        .form-floating select {
+            border-radius: 25px;
+            border: none;
+            padding: 15px;
+            font-size: 1rem;
+            background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+    
+        .form-floating input:hover,
+        .form-floating textarea:hover,
+        .form-floating select:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 25px rgba(50, 200, 100, 0.3);
+        }
+    
+        .form-floating input:focus,
+        .form-floating textarea:focus,
+        .form-floating select:focus {
+            outline: none;
+            box-shadow: 0 7px 30px rgba(50, 200, 100, 0.5);
+            transform: scale(1.05);
+        }
+    
+        .form-label {
+            font-size: 1rem;
+            color: #32a852;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+    
+    
+        .btn-save-mode {
+            background: linear-gradient(90deg, #32a852, #81f495);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            padding: 15px;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(50, 200, 100, 0.4);
+            transition: all 0.4s ease;
+            text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+        }
+    
+        .btn-save-mode:hover {
+            background: linear-gradient(90deg, #81f495, #32a852);
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 15px 30px rgba(50, 200, 100, 0.6);
+        }
+    
+        .btn-save-mode:active {
+            transform: scale(0.95) translateY(2px);
+            box-shadow: 0 3px 10px rgba(50, 200, 100, 0.5);
+        }
+    
+   
+        .modal-footer {
+            background: linear-gradient(to right, #81f495, #32a852);
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+    
+        .modal-footer button {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+
+
+        .card-list .card-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .card-list .border {
+            transition: transform 0.2s ease;
+        }
+        
+        .card-list .border:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-save-mode {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-save-mode:hover {
+            background-color: #0056b3;
+        }
+
+        .form-upload {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-upload input[type="file"] {
+            display: none;
+        }
+
+        .form-upload label {
+            display: block;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-upload label:hover {
+            background-color: #0056b3;
+        }
+
+        .file-link {
+            margin-top: 10px;
+            display: block;
+            font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .file-link:hover {
+            text-decoration: underline;
+        }
+        
+        .custom-save-btn {
+            background: linear-gradient(135deg, #28a745, #218838);
+            border: none;
+            padding: 12px;
+            font-weight: bold;
+            transition: all 0.3s ease-in-out;
+            border-radius: 8px; 
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .custom-save-btn:hover {
+            transform: scale(1.05); 
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .custom-save-btn:active {
+            transform: scale(0.98); 
+           box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2); 
+        }
+        
+
+    .btn-mode-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #ff4d4d; 
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-mode-close:hover {
+        color: #d63031; 
+        transform: scale(1.2);
+    }
+</style>
+    
+
+     <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+
+<div class="container  mt-5" style="direction: rtl;">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <style>
+                .cfomplete_profile_cta {
+                    text-decoration: underline;
+                    text-underline-offset: 2px;
+                    font-weight: bold;
+                }
+            </style>
+        </div>
+        <div class="col-lg-8">
+            <div class="card shadow-lg rounded p-4 mb-4" style="direction:ltr">
+                <div class="row align-items-center">
+                    <div class="col-md-3 d-flex justify-content-center">
+                        <div class="position-relative">
+                            <div class="edit-overlay position-absolute top-0 end-0 p-2">
+                            </div>
+                            {% if profile.picture  %}
+                            <img src="{{ profile.picture.url }}" class="rounded-circle border border-info shadow-sm"
+                               width="150px" height="150px" alt="Profile Picture">
+                            {%  else %}
+                            <img src="{% static 'img/download.png' %}" alt="Company Image" width="150px" height="150px" class="company-image" >
+                            {%  endif   %}
+                        </div>
+                    </div>
+            
+        
+                    <div class="col-md-9  text-center">
+                        <div class=" fs-1">
+                            <h3 class="mb-1 fw-bold">{{ profile.user.username }}</h3>
+                        </div>
+                        <p class="text-muted mb-3 fs-6">
+                            {% comment %} {% with profile.experiences.last as experience %}
+                            {% if experience and experience.jobTitle %}
+                                {{ experience.jobTitle }}
+                            {% else %}
+                                لم يتم تحديد المسمى الوظيفي
+                            {% endif %}
+                        {% endwith %} {% endcomment %}
+                        </p>
+            
+                        <div class="fs-6 text-secondary">
+                            <span class="me-3 ">
+                                <i class="fas fa-map-marker-alt text-primary me-1"></i>
+                                {% if profile.state %}
+                                    {{ profile.state }}
+                                {% else %}
+                                    لم يتم تحديد الموقع
+                                {% endif %}
+                            </span>
+                          
+                        </div>
+            
+                
+                    </div>
+                </div>
+            </div>
+            
+            
+
+            <div class="card card-list rounded shadow my-4">
+                <div class="card-header d-flex  bg-white align-items-center justify-content-between ">
+                    <div>
+
+                        <h3>نبذة مختصرة</h3>
+                    </div>
+                    <div class="lh-1">
+                        {% if is_employer %}
+
+                        {% else %}
+                        <a  href="{% url "profile-users-edit"  profile.slug %}" >
+                            <i class="far fa-edit"></i>
+                            <span>تعديل</span>
+                       </a>    
+                        {%  endif %}
+            
+                    </div>
+
+                </div>
+                <div class="card-header d-flex  bg-white align-items-center justify-content-between ">
+                    {% if profile.description  %}
+                    {{   profile.description  }}
+                    {% else %}            
+                      -----
+
+                    {% endif %}
+                </div>
+
+            </div>
+
+ 
+
+<div class="card shadow-lg rounded p-4 my-4">
+    <div class="card-header d-flex align-items-center justify-content-between bg-light border-0">
+        <h4 class="fw-bold text-primary m-0">المعلومات الشخصية</h4>
+        {% if is_employer %}             
+        {% else %}
+        <a href="{% url 'profile-users-edit' profile.slug %}" class="btn btn-sm btn-outline-primary">
+            <i class="far fa-edit me-1"></i> تعديل
+        </a>
+    {%  endif %}
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold text-dark">تاريخ الميلاد:</td>
+                            <td class="text-muted">
+                                {% if profile.data_of_brith %}
+                                    {{ profile.data_of_brith }}
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-dark">الخبرة:</td>
+                            <td class="text-muted">
+                                {% if profile.Number_of_years_of_experience %}
+                                    {{ profile.Number_of_years_of_experience }} سنوات
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-dark">الحد الأدنى للراتب:</td>
+                            <td class="text-muted">
+                                {% if profile.minimum_salary %}
+                                    {{ profile.minimum_salary }} دولار أمريكي
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- العمود الثاني -->
+            <div class="col-md-6">
+                <table class="table table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold text-dark">النوع:</td>
+                            <td class="text-muted">
+                                {% if profile.gender %}
+                                    {{ profile.gender }}
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-dark">الجنسية:</td>
+                            <td class="text-muted">
+                                {% if profile.nationality %}
+                                    {{ profile.nationality }}
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-dark">خصوصية الملف الشخصي:</td>
+                            <td class="text-muted">عام، أي مستخدم يستطيع عرض ملفي الشخصي</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+       <!-- بيانات التواصل -->
+<div class="card shadow-lg rounded p-4 my-4">
+    <div class="card-header d-flex align-items-center justify-content-between bg-light border-0">
+        <h4 class="fw-bold text-primary m-0">📞 بيانات التواصل</h4>
+
+        {% if is_employer %}
+                            
+        {% else %}
+
+        <a href="{% url 'profile-users-edit' profile.slug %}" class="btn btn-sm btn-outline-primary">
+            <i class="far fa-edit me-1"></i> تعديل
+        </a>
+        {%  endif %}
+    </div>
+    <div class="card-body overflow-auto">
+        <div class="row">
+            <!-- العمود الأول -->
+            <div class="col-md-6">
+                <table class="table table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold text-dark">الدولة:</td>
+                            <td class="text-muted">
+                                {% if profile.state %}
+                                    {{ profile.state }}
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-dark">المحافظة:</td>
+                            <td class="text-muted">
+                                {% if profile.governorate %}
+                                    {{ profile.governorate }}
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% comment %} <tr>
+                            <td class="fw-bold text-dark">المدينة:</td>
+                            <td class="text-muted">
+                                {% if profile.city %}
+                                    {{ profile.city }}
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr> {% endcomment %}
+                        <tr>
+                            <td class="fw-bold text-dark">العنوان:</td>
+                            <td class="text-muted">
+                                {% if profile.location %}
+                                    {{ profile.location }}
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- العمود الثاني -->
+            <div class="col-md-6">
+                <table class="table table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold text-dark">رقم الجوال:</td>
+                            <td class="text-muted">
+                                {% if profile.phone_Number %}
+                                    {{ profile.phone_Number }}
+                                {% else %}
+                                    -----
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold text-dark">البريد الإلكتروني:</td>
+                            <td class="text-muted">{{ profile.user.email }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% comment %} =============================================================== {% endcomment %}
+
+            <div class="row">
+                <div class="container mt-4">
+                    <!-- قسم التعليم -->
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-header bg-white border-0 d-flex align-items-center justify-content-between">
+                            <h4 class="mb-0 text-primary fw-bold">
+                                <span class="me-2" style="font-size: 1.3rem;">📖</span> التعليم
+                            </h4>
+
+                            {% if is_employer %}
+                            
+                            {% else %}
+                    
+                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addEducationModal">
+                                <i class="fas fa-plus-circle me-1"></i> إضافة
+                            </button>
+                            {%  endif %}
+                        </div>
+                
+                        <div class="card-body">
+                            <div class="row g-3">
+                                {% for edu in education_get %}
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded shadow-sm bg-light">
+                                        <h6 class="text-primary mb-2">
+                                            <i class="fas fa-graduation-cap me-1"></i> {{ edu.academic_degree }}
+                                        </h6>
+                
+                                        {% if edu.institute_university %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-university text-muted me-1"></i>
+                                            <strong>المعهد/الجامعة:</strong> {{ edu.institute_university }}
+                                        </p>
+                                        {% endif %}
+                
+                                        {% if edu.Domain %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-book text-muted me-1"></i>
+                                            <strong>التخصص:</strong> {{ edu.Domain }}
+                                        </p>
+                                        {% endif %}
+                
+                                        {% if edu.Appreciation %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-award text-muted me-1"></i>
+                                            <strong>التقدير:</strong> {{ edu.Appreciation }}
+                                        </p>
+                                        {% endif %}
+                
+                                        {% if edu.Year_of_completion_or_graduation %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-calendar-alt text-muted me-1"></i>
+                                            <strong>سنة التخرج:</strong> {{ edu.Year_of_completion_or_graduation }}
+                                        </p>
+                                        {% endif %}
+
+                                        {% if is_employer %}
+                            
+                                        {% else %}
+                                
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <a href="javascript:void(0);" 
+                                               class="text-info me-3 small edit-education-btn" 
+                                               data-id="{{ edu.id }}" 
+                                               data-academic-degree="{{ edu.academic_degree }}" 
+                                               data-institute-university="{{ edu.institute_university }}" 
+                                               data-domain="{{ edu.Domain }}" 
+                                               data-appreciation="{{ edu.Appreciation }}" 
+                                               data-year-of-completion="{{ edu.Year_of_completion_or_graduation }}">
+                                                <i class="fas fa-edit"></i> تعديل
+                                            </a>
+                                            <a href="{% url 'profile-users-delete' edu.id %}" class="text-danger small">
+                                                <i class="fas fa-trash-alt"></i> حذف
+                                            </a>
+                                        </div>
+                                        {%  endif %}
+                
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="col-12 text-center">
+                                    <p class="text-muted small">لا توجد بيانات تعليم مضافة حاليًا.</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+              
+
+   
+          
+                <div class="container mt-4">
+                    <!-- قسم الخبرة -->
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-header bg-white border-0 d-flex align-items-center justify-content-between">
+                            <h4 class="mb-0 text-primary fw-bold">
+                                <span class="me-2" style="font-size: 1.3rem;">💼</span> الخبرة
+                            </h4>
+
+                            {% if is_employer %}
+                            
+                            {% else %}
+                    
+                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addExperienceModal">
+                                <i class="fas fa-plus-circle me-1"></i> إضافة
+                            </button>
+                            {%  endif %}
+                        </div>
+                
+                        <div class="card-body">
+                            {% if experience_filter.exists %}
+                            <div class="row g-3">
+                                {% for item in experience_filter %}
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded shadow-sm bg-light">
+                                        <h6 class="text-primary mb-2">
+                                            <i class="fas fa-building me-1"></i> {{ item.Company_Name|default:"(غير محدد)" }}
+                                        </h6>
+                
+                                        {% if item.Company_location %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-map-marker-alt text-muted me-1"></i>
+                                            <strong>الموقع:</strong> {{ item.Company_location }}
+                                        </p>
+                                        {% endif %}
+                
+                                        {% if item.From_history and item.To_date %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-calendar-alt text-muted me-1"></i>
+                                            <strong>الفترة:</strong> {{ item.From_history }} - {{ item.To_date|default:"حتى الآن" }}
+                                        </p>
+                                        {% endif %}
+                
+                                        {% if item.Description %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-info-circle text-muted me-1"></i>
+                                            <strong>الوصف:</strong> {{ item.Description }}
+                                        </p>
+                                        {% endif %}
+
+                                        {% if is_employer %}
+                            
+                                        {% else %}
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <a href="#addExperienceModal" 
+                                                data-toggle="modal" 
+                                                data-id="{{ item.id }}" 
+                                                data-job-title="{{ item.jobTitle }}"  
+                                                data-company-name="{{ item.Company_Name }}" 
+                                                data-company-location="{{ item.Company_location }}" 
+                                                data-from-history="{{ item.From_history|date:'Y-m-d' }}" 
+                                                data-to-date="{{ item.To_date|date:'Y-m-d' }}" 
+                                                data-description="{{ item.Description }}" 
+                                                class="text-info me-3 small edit-experience-btn">
+                                                <i class="fas fa-edit"></i> تعديل
+                                            </a>
+                                            <a href="{% url 'profile-users-delete' item.id %}" class="text-danger small">
+                                                <i class="fas fa-trash-alt"></i> حذف
+                                            </a>
+                                        </div>
+                                        {%  endif %}
+                
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center">
+                                <p class="text-muted small">لا توجد خبرات مضافة بعد.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+
+  
+
+
+                <!-- قسم الشهادات -->
+                <div class="container mt-4">
+                    <!-- قسم الشهادات -->
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-header bg-white border-0 d-flex align-items-center justify-content-between">
+                            <h4 class="mb-0 text-primary fw-bold">
+                                <span class="me-2" style="font-size: 1.3rem;">🎓</span> الشهادات
+                            </h4>
+                            
+                            {% if is_employer %}
+                            
+                            {% else %}
+                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addCertificateModal">
+                                <i class="fas fa-plus-circle me-1"></i> إضافة
+                            </button>
+                    
+                            {%  endif %}
+                        </div>
+                
+                        <div class="card-body">
+                            {% if certificate_get %}
+                            <div class="row g-3">
+                                {% for cert in certificate_get %}
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded shadow-sm bg-light">
+                                        <h6 class="text-primary mb-2">
+                                            <i class="fas fa-certificate me-1"></i> {{ cert.certificate_name }}
+                                        </h6>
+                
+                                        {% if cert.Donor %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-building text-muted me-1"></i>
+                                            <strong>الجهة:</strong> {{ cert.Donor }}
+                                        </p>
+                                        {% endif %}
+                
+                                        {% if cert.Date %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-calendar-alt text-muted me-1"></i>
+                                            <strong>التاريخ:</strong> {{ cert.Date }}
+                                        </p>
+                                        {% endif %}
+                
+                                        {% if cert.Certificate_description %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-info-circle text-muted me-1"></i>
+                                            <strong>الوصف:</strong> {{ cert.Certificate_description }}
+                                        </p>
+                                        {% endif %}
+
+                                        {% if is_employer %}
+                            
+                                        {% else %}
+                                
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <a href="#" class="text-info me-3 small edit-certificate-btn"
+                                               data-id="{{ cert.id }}"
+                                               data-name="{{ cert.certificate_name }}"
+                                               data-donor="{{ cert.Donor }}"
+                                               data-date="{{ cert.Date }}"
+                                               data-description="{{ cert.Certificate_description }}">
+                                                <i class="fas fa-edit"></i> تعديل
+                                            </a>
+                                            <a href="{% url 'profile-users-delete' cert.id %}" class="text-danger small">
+                                                <i class="fas fa-trash-alt"></i> حذف
+                                            </a>
+                                        </div>
+                                        {%  endif %}
+                
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center">
+                                <p class="text-muted small">لا توجد شهادات مضافة بعد.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+
+            
+
+                <div class="container mt-4">
+                    <!-- قسم اللغات -->
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-header bg-white border-0 d-flex align-items-center justify-content-between">
+                            <h4 class="mb-0 text-primary fw-bold">
+                                <span class="me-2" style="font-size: 1.3rem;">🌐</span> اللغات
+                            </h4>
+
+                            {% if is_employer %}
+                            
+                            {% else %}
+                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addLanguageModal">
+                                <i class="fas fa-plus-circle me-1"></i> إضافة
+                            </button>
+                    
+                            {%  endif %}
+                        </div>
+                
+                        <div class="card-body">
+                            {% if language_filter %}
+                            <div class="row g-3">
+                                {% for lang in language_filter %}
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded shadow-sm bg-light">
+                                        <h6 class="text-primary mb-2">
+                                            <i class="fas fa-language me-1"></i> {{ lang.language_name }}
+                                        </h6>
+                
+                                        {% if lang.language_lavel %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-star text-muted me-1"></i>
+                                            <strong>المستوى:</strong> {{ lang.language_lavel }}
+                                        </p>
+                                        {% endif %}
+                
+
+                                        {% if is_employer %}
+                            
+                                        {% else %}
+                                
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <a href="#" class="text-info me-3 small edit-language-btn"
+                                               data-id="{{ lang.id }}"
+                                               data-language-name="{{ lang.language_name }}"
+                                               data-language-lavel="{{ lang.language_lavel }}"
+                                               data-toggle="modal" data-target="#addLanguageModal">
+                                                <i class="fas fa-edit"></i> تعديل
+                                            </a>
+                                            <a href="{% url 'profile-users-delete' lang.id %}" class="text-danger small">
+                                                <i class="fas fa-trash-alt"></i> حذف
+                                            </a>
+                                        </div>
+                                        {%  endif %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center">
+                                <p class="text-muted small">لا توجد لغات مضافة بعد.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+
+
+                <div class="container mt-4">
+                    <!-- قسم المشاريع -->
+                    <div class="card shadow-sm border-0 rounded-3">
+                        <div class="card-header bg-white border-0 d-flex align-items-center justify-content-between">
+                            <h4 class="mb-0 text-primary fw-bold">
+                                <span class="me-2" style="font-size: 1.3rem;">🌟</span> المشاريع
+                            </h4>
+
+                            {% if is_employer %}
+                            
+                            {% else %}
+                    
+                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addProjectModal">
+                                <i class="fas fa-plus-circle me-1"></i> إضافة 
+                            </button>
+                            {%  endif %}
+                        </div>
+                
+                        <div class="card-body">
+                            {% if project_get %}
+                            <div class="row g-3">
+                                {% for project in project_get %}
+                                <div class="col-md-6">
+                                    <div class="p-3 border rounded shadow-sm bg-light">
+                                        <h6 class="text-primary mb-2">
+                                            <i class="fas fa-project-diagram me-1"></i> 
+                                            {{ project.project_Name_Link|default:"(اسم المشروع غير متوفر)" }}
+                                        </h6>
+                
+                                        {% if project.end_date %}
+                                        <p class="mb-1 small">
+                                            <i class="fas fa-calendar-alt text-muted me-1"></i>
+                                            <strong>تاريخ الانتهاء:</strong> {{ project.end_date }}
+                                        </p>
+                                        {% endif %}
+                
+                                        {% if project.project_description %}
+                                        <p class="small text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            {{ project.project_description }}
+                                        </p>
+                                        {% endif %}
+
+
+                                        {% if is_employer %}
+                            
+                                        {% else %}
+                                
+                                        <div class="d-flex justify-content-end mt-2">
+                                            <a href="#" class="text-info me-3 small edit-project-btn"
+                                            data-id="{{ project.id }}"
+                                            data-project-name="{{ project.project_Name_Link }}"
+                                            data-end-date="{{ project.end_date|date:'Y-m-d' }}"
+                                            data-project-description="{{ project.project_description }}"
+                                            data-toggle="modal" data-target="#addProjectModal">
+                                            <i class="fas fa-edit"></i> تعديل
+                                         </a>
+                                         
+                                         
+                                            <a href="{% url 'profile-users-delete' project.id %}" class="text-danger small">
+                                                <i class="fas fa-trash-alt"></i> حذف
+                                            </a>
+                
+                                        </div>
+                                        {%  endif %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="text-center">
+                                <p class="text-muted small">لا توجد مشاريع مضافة بعد.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+
+    
+            <!-- نافذة إضافة مشروع -->
+       
+        </div>
+
+            <!-- Modal for adding education -->
+        <!-- إضافة التعليم -->
+        <div class="modal fade" id="addEducationModal" tabindex="-1" role="dialog" aria-labelledby="addEducationModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content shadow-lg rounded-3">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="education">
+                        <input type="hidden" name="id" id="education-id">
+
+                        <!-- الهيدر -->
+                        <div class="modal-header border-bottom-0 ">
+                            <button type="button" class="close btn-mode-close opacity-100 fs-20" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h5 class="modal-title" id="addEducationModalLabel">
+                                <small>📖</small> إضافة التعليم
+                            </h5>
+                        </div>
+                        
+
+                        <!-- جسم المودال -->
+                        <div class="modal-body">
+                            <!-- الشهادة الأكاديمية -->
+                            <div class="form-floating mb-3">
+                                <select class="form-control" id="academic_degree" name="academic_degree" required>
+                                    <option value="" disabled {% if not profile.academic_degree %} selected {% endif %}>اختر الشهادة*</option>
+                                    {% for code, name in academic_degree %}
+                                    <option value="{{ code }}" {% if profile.academic_degree == code %} selected {% endif %}>
+                                        {{ name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <label for="academic_degree" class="form-label">الشهادة الأكاديمية*</label>
+                            </div>
+
+                            <!-- اسم المعهد أو الجامعة -->
+                            <div class="form-floating mt-4 mb-3">
+                                <input type="text" class="form-control" name="institute_university" id="institute_university" placeholder="الاسم كامل" required>
+                                <label for="institute_university" class="form-label">اسم المعهد أو الجامعة*</label>
+                                <div class="error-message" id="nameError"></div>
+                            </div>
+
+                            <!-- المجال الدراسي -->
+                            <div class="form-floating mt-4 mb-3">
+                                <input type="text" class="form-control" name="Domain" id="Domain" placeholder="المجال" required>
+                                <label for="Domain" class="form-label">المجال*</label>
+                                <div class="error-message" id="domainError"></div>
+                            </div>
+
+                            <!-- التقدير وسنة التخرج -->
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-floating mb-2">
+                                        <input type="text" class="form-control" name="Appreciation" id="Appreciation" placeholder="التقدير" required>
+                                        <label for="Appreciation" class="form-label">التقدير*</label>
+                                        <div class="error-message" id="appreciationError"></div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-floating mb-2">
+                                        <input type="date" class="form-control" name="Year_of_completion_or_graduation" id="Year_of_completion_or_graduation" required>
+                                        <label for="Year_of_completion_or_graduation" class="form-label">سنة التخرج أو الانتهاء*</label>
+                                        <div class="error-message" id="yearError"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- الفوتر -->
+                    <!-- الفوتر -->
+        <div class="modal-footer border-top-0">
+            <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center fs-18 custom-save-btn" type="submit">
+                <i class="far fa-save me-2"></i> حفظ 
+            </button>
+        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+  
+    <!-- نافذة إضافة الخبرة -->
+    <div class="modal fade" id="addExperienceModal" tabindex="-1" role="dialog" aria-labelledby="addExperienceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="experience">
+                    <input type="hidden" name="id" id="experience-id"> <!-- حقل مخفي للـ ID -->
+
+                    <div class="modal-header border-bottom-0 d-flex justify-content-between">
+                        <button type="button" class="close btn-mode-close opacity-100 fs-20" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h5 class="modal-title" id="addExperienceModalLabel"><small>💼</small> إضافة الخبرة</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- حقلين جنب بعض: المسمى الوظيفي واسم الشركة -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="jobTitle" id="jobTitle" placeholder="المسمى الوظيفي" required>
+                                    <label for="jobTitle" class="form-label">المسمى الوظيفي*</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="Company_Name" id="Company_Name" placeholder="اسم الشركة" required>
+                                    <label for="Company_Name" class="form-label">اسم الشركة*</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- حقلين جنب بعض: موقع الشركة وتاريخ البداية -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="Company_location" id="Company_location" placeholder="موقع الشركة" required>
+                                    <label for="Company_location" class="form-label">موقع الشركة*</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" name="From_history" id="From_history" required>
+                                    <label for="From_history" class="form-label">تاريخ البداية*</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- حقلين جنب بعض: تاريخ النهاية والوصف -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" name="To_date" id="To_date" required>
+                                    <label for="To_date" class="form-label">تاريخ النهاية*</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <textarea name="Description" id="Description" class="form-control" placeholder="وصف الوظيفة" required></textarea>
+                                    <label for="Description" class="form-label">الوصف*</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-top-0">
+                        <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center fs-18 custom-save-btn" type="submit">
+                            <i class="far fa-save me-2"></i> حفظ 
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+            
+    <!-- نافذة إضافة الشهادة -->
+    <div class="modal fade" id="addCertificateModal" tabindex="-1" role="dialog" aria-labelledby="addCertificateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="certificate">
+                    <input type="hidden" name="id" id="certificate_id" value="">
+
+                    <div class="modal-header border-bottom-0 d-flex justify-content-between">
+                        <button type="button" class="close btn-mode-close opacity-100 fs-20" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h5 class="modal-title" id="addCertificateModalLabel"><small>🎓</small> إضافة شهادة</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- حقلين جنب بعض: اسم الشهادة والجهة المانحة -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="certificate_name" id="certificate_name" placeholder="اسم الشهادة" required>
+                                    <label for="certificate_name" class="form-label">اسم الشهادة*</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="Donor" id="Donor" placeholder="الجهة المانحة" required>
+                                    <label for="Donor" class="form-label">الجهة المانحة*</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- حقلين جنب بعض: تاريخ الشهادة والوصف -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" name="Date" id="Date" placeholder="تاريخ الشهادة" required>
+                                    <label for="Date" class="form-label">تاريخ الشهادة*</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating">
+                                    <textarea name="Certificate_description" id="Certificate_description" class="form-control" placeholder="وصف الشهادة" required></textarea>
+                                    <label for="Certificate_description" class="form-label">وصف الشهادة*</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-top-0">
+                        <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center fs-18 custom-save-btn" type="submit">
+                            <i class="far fa-save me-2"></i> حفظ 
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+            
+<!-- نافذة إضافة اللغة -->
+    <div class="modal fade" id="addLanguageModal" tabindex="-1" role="dialog" aria-labelledby="addLanguageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="language">
+                    <input type="hidden" name="id" id="language_id"> <!-- سيتم تعبئته عند التعديل -->
+
+                    <div class="modal-header border-bottom-0 d-flex justify-content-between">
+                        <button type="button" class="close btn-mode-close opacity-100 fs-20" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h5 class="modal-title" id="addLanguageModalLabel"><small>🌐</small> إضافة اللغة</h5>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- صف يحتوي على حقل اللغة ومستوى اللغة جنب بعض -->
+                        <div class="row">
+                            <!-- حقل اسم اللغة -->
+                            <div class="col-md-6 mb-3">
+                                <select class="form-control" id="language_name" name="language_name" required>
+                                    <option value="" disabled {% if not profile.LANGUAGE %} selected {% endif %}>اختر اللغة*</option>
+                                    {% for code, name in LANGUAGE %}
+                                    <option value="{{ code }}" {% if profile.LANGUAGE == code %} selected {% endif %}>
+                                        {{ name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- حقل مستوى اللغة -->
+                            <div class="col-md-6 mb-3">
+                                <select class="form-control" id="language_lavel" name="language_lavel" required>
+                                    <option value="" disabled {% if not profile.LANGUAGE_LAVEL %} selected {% endif %}>اختر المستوى*</option>
+                                    {% for code, name in LANGUAGE_LAVEL %}
+                                    <option value="{{ code }}" {% if profile.LANGUAGE_LAVEL == code %} selected {% endif %}>
+                                        {{ name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-top-0">
+                        <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center fs-18 custom-save-btn" type="submit">
+                            <i class="far fa-save me-2"></i> حفظ 
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+        <!-- نافذة إضافة المشروع -->
+        <div class="modal fade" id="addProjectModal" tabindex="-1" role="dialog" aria-labelledby="addProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="project">
+                        <input type="hidden" name="id" id="project_id"> <!-- سيتم تعبئته عند التعديل -->
+
+                        <div class="modal-header border-bottom-0 d-flex justify-content-between">
+                            <button type="button" class="close btn-mode-close opacity-100 fs-20" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h5 class="modal-title" id="addProjectModalLabel"><small>🚀</small> إضافة مشروع</h5>
+                        </div>
+
+                        <div class="modal-body">
+                            <!-- حقلين جنب بعض: رابط المشروع وتاريخ الانتهاء -->
+                            <div class="row">
+                                <!-- رابط المشروع -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" name="project_Name_Link" id="project_Name_Link" placeholder="رابط المشروع" required>
+                                        <label for="project_Name_Link" class="form-label">🔗 رابط المشروع   *</label>
+                                    </div>
+                                </div>
+
+                                <!-- تاريخ الانتهاء -->
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="date" class="form-control" name="end_date" id="end_date" required>
+                                        <label for="end_date" class="form-label">📅 تاريخ الانتهاء*</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- وصف المشروع -->
+                            <div class="form-floating mb-3">
+                                <textarea name="project_description" id="project_description" class="form-control" placeholder="وصف المشروع" required></textarea>
+                                <label for="project_description" class="form-label">📝 وصف المشروع*</label>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer border-top-0">
+                            <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center fs-18 custom-save-btn" type="submit">
+                                <i class="far fa-save me-2"></i> حفظ 
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <div class="col-lg-4">
+
+        <div class="card shadow rounded mb-4 unlock-card " id="">
+            <div class="px-6 pt-6 pb-5">
+
+                <a href="mailto:asfasfasf@gmail.com"
+                    class="py-1 align-items-center btn btn-block btn-outline-primary btn-sm d-flex font-weight-extrabold fs-16 justify-content-between mb-1">
+                    <i class="far fa-envelope fs-14 mr-2"></i>
+                    <span class="flex-grow-1 ltr text-center max-w-90">{{ request.user.email }}</span>
+                </a>
+
+
+                <a href="tel:"
+                    class="py-1 align-items-center btn btn-block btn-outline-primary btn-sm d-flex font-weight-extrabold fs-16 justify-content-between mb-1">
+                    <i class="far fa-mobile-alt fs-14 mr-2"></i>
+                    {%  if  profile.phone_Number %}
+                    <span class="flex-grow-1 ltr text-center"> {{ profile.phone_Number }}</span>
+                    {%  else %}
+                    <span class="flex-grow-1 ltr text-center"> ----</span>
+
+                    {%  endif %}
+                </a>
+            </div>
+        </div>
+        <a role="button" data-toggle="collapse" href="#profile-contact-card" aria-haspopup="true"
+            aria-expanded="false" aria-controls="profile-contact-card" id="profile-contact-card-btn"
+            class="btn-block btn btn-md rounded-0 btn-primary d-lg-none d-none">
+            <i class="fa fa-chevron-up mr-1"></i>
+            مشاهدة السيرة الذاتية وبيانات الاتصال</a>
+  
+            <style>
+                .box-sky {
+                    max-width: 400px;
+                    margin: 20px auto;
+                    padding: 20px;
+                    background-color: #f8f9fa;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    text-align: center;
+                }
+            
+                .title-magic {
+                    display: block;
+                    margin-bottom: 10px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #333;
+                }
+            
+                .ghost-input {
+                    display: none;
+                }
+            
+                .shiny-label {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    color: #fff;
+                    background-color: #007bff;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                }
+            
+                .shiny-label:hover {
+                    background-color: #0056b3;
+                }
+            
+                .action-fire {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #fff;
+                    background-color: #28a745;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                    margin-top: 20px;
+                }
+            
+                .action-fire:hover {
+                    background-color: #218838;
+                }
+
+                .file-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.file-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.no-file {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #dc3545;
+    font-weight: bold;
+}
+            </style>
+               
+            <form method="POST" enctype="multipart/form-data" class="box-sky">
+                {% csrf_token %}
+                
+                {% if is_employer %}
+                
+                {% else %}
+                
+                <input type="hidden" name="form_type" value="biography">
+                <input type="file" id="fileInput" name="the_biography" class="ghost-input" accept="application/pdf">
+                <label for="fileInput" class="shiny-label">اختر السيرة الذاتية (PDF)</label>
+                <button type="submit" class="action-fire">رفع السيرة الذاتية</button>
+                {%  endif %}
+                <br><br>
+                {% if profile.the_biography %}
+
+                {% if is_employer %}
+                            
+                {% else %}
+                <p>  بحال  التعديل قم برفع ملف اخر  </p>
+        
+                {%  endif %}
+                <a href="{{ profile.the_biography.url }}" target="_blank" class="file-link">
+                    رابط السيرة الذاتية
+                </a>
+
+
+            {% else %}
+                <p class="no-file">لا يوجد ملف مرفوع حاليًا.</p>
+            {% endif %}
+             
+         
+            </form>
+     
+           
+            
+            
+    </div>
+    </div>
+    </div>
+    
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+
+
+
+
+<script>
+ 
+    function updateProgressBar() {
+        const totalFields = 7; 
+        let filledFields = 0;
+        
+      
+        if (document.getElementById('birthdate').value) filledFields++;
+        if (document.getElementById('experience').value) filledFields++;
+        if (document.getElementById('salary').value) filledFields++;
+        if (document.getElementById('gender').value) filledFields++;
+        if (document.getElementById('nationality').value) filledFields++;
+        if (document.getElementById('privacy').value) filledFields++;
+        if (document.getElementById('country').value) filledFields++; // مثال لحقل آخر
+    
+
+        const progressPercentage = (filledFields / totalFields) * 100;
+        document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
+        document.getElementById('progress-bar').innerText = `${Math.round(progressPercentage)}%`;
+    
+        localStorage.setItem('progress', progressPercentage);
+    }
+    
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const savedProgress = localStorage.getItem('progress');
+        if (savedProgress) {
+            document.getElementById('progress-bar').style.width = `${savedProgress}%`;
+            document.getElementById('progress-bar').innerText = `${Math.round(savedProgress)}%`;
+        }
+    
+
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('input', updateProgressBar);
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+            const listItems = document.querySelectorAll('.list-group-item');
+    
+            listItems.forEach(item => {
+                item.addEventListener('mouseover', () => {
+                    const actions = item.querySelector('.list-actions');
+                    if (actions) actions.classList.remove('d-none');
+                });
+    
+                item.addEventListener('mouseout', () => {
+                    const actions = item.querySelector('.list-actions');
+                    if (actions) actions.classList.add('d-none');
+                });
+            });
+        });
+
+
+{% comment %} التعليم {% endcomment %}
+    $(document).on('click', '.edit-education-btn', function (event) {
+        event.preventDefault(); 
+
+        var educationId = $(this).data('id');
+        var academicDegree = $(this).data('academic-degree');
+        var instituteUniversity = $(this).data('institute-university');
+        var domain = $(this).data('domain');
+        var appreciation = $(this).data('appreciation');
+        var yearOfCompletion = $(this).data('year-of-completion');
+
+  
+        $('#education-id').val(educationId);
+        $('#academic_degree').val(academicDegree);
+        $('#institute_university').val(instituteUniversity);
+        $('#Domain').val(domain);
+        $('#Appreciation').val(appreciation);
+        $('#Year_of_completion_or_graduation').val(yearOfCompletion);
+
+      
+        $('#addEducationModal').modal('show');
+    });
+
+
+{% comment %} الخبرة {% endcomment %}
+    $(document).on('click', '.edit-experience-btn', function() {
+        var experienceId = $(this).data('id');
+        var jobTitle = $(this).data('job-title'); 
+        var companyName = $(this).data('company-name');
+        var companyLocation = $(this).data('company-location');
+        var fromHistory = $(this).data('from-history'); 
+        var toDate = $(this).data('to-date');  
+        var description = $(this).data('description');
+
+        console.log("Job Title:", jobTitle); 
+        console.log("From Date:", fromHistory);
+        console.log("To Date:", toDate);
+
+        $('#experience-id').val(experienceId);
+        $('#jobTitle').val(jobTitle);  
+        $('#Company_Name').val(companyName);
+        $('#Company_location').val(companyLocation);
+        $('#Description').val(description);
+
+        if (fromHistory) {
+            $('#From_history').val(fromHistory); 
+        } else {
+            $('#From_history').val(""); 
+        }
+
+        if (toDate) {
+            $('#To_date').val(toDate); 
+        } else {
+            $('#To_date').val(""); 
+        }
+    });
+
+
+    $(document).on('click', '.edit-certificate-btn', function(e) {
+        e.preventDefault();  
+
+        var certificateId = $(this).data('id');
+        var certificateName = $(this).data('name');
+        var certificateDonor = $(this).data('donor');
+        var certificateDate = $(this).data('date');
+        var certificateDescription = $(this).data('description');
+
+   
+        $('#certificate_id').val(certificateId);
+        $('#certificate_name').val(certificateName);
+        $('#Donor').val(certificateDonor);
+        $('#Date').val(certificateDate);
+        $('#Certificate_description').val(certificateDescription);
+
+
+        $('#addCertificateModal').modal('show');
+    });
+
+
+
+    $(document).on('click', '.edit-certificate-btn', function() {
+
+        var certificateId = $(this).data('id');
+        var certificateName = $(this).data('name');
+        var donor = $(this).data('donor');
+        var date = $(this).data('date');  
+        var certificateDescription = $(this).data('description');
+
+    
+        if (date) {
+   
+            var formattedDate = new Date(date).toISOString().split('T')[0];  
+            $('#Date').val(formattedDate); 
+        }
+
+        $('#certificate_id').val(certificateId);
+        $('#certificate_name').val(certificateName);
+        $('#Donor').val(donor);
+        $('#Certificate_description').val(certificateDescription);
+    });
+
+
+    $(document).on('click', '.edit-language-btn', function() {
+     
+        var languageId = $(this).data('id');
+        var languageName = $(this).data('language-name');
+        var languageLevel = $(this).data('language-lavel');
+
+        $('#language_id').val(languageId);
+        $('#language_name').val(languageName);
+        $('#language_lavel').val(languageLevel);
+    });
+
+
+    $(document).on('click', '.edit-project-btn', function () {
+        var projectId = $(this).data('id');
+        var projectName = $(this).data('project-name');
+        var projectDate = $(this).data('end-date');  
+        var projectDescription = $(this).data('project-description');
+    
+        console.log("Project ID:", projectId);
+        console.log("Project Name:", projectName);
+        console.log("Project Date:", projectDate);
+        console.log("Project Description:", projectDescription);
+  
+        $('#project_id').val(projectId); 
+        $('#project_Name_Link').val(projectName);
+        $('#project_description').val(projectDescription);
+    
+       
+        if (projectDate) {
+            var formattedDate = new Date(projectDate).toISOString().split('T')[0];
+            $('#end_date').val(formattedDate);
+        } else {
+            $('#end_date').val("");  
+        }
+    });
+    
+
+
+
+$(document).on('click', '.edit-btn', function () {
+    var targetModal = $(this).data('target'); 
+    resetModalFields(targetModal);
+    
+    var modal = $(targetModal); 
+
+
+    modal.find('.modal-title').text("تعديل البيانات");
+    modal.find('input[name="form_type"]').val('edit'); 
+
+
+    modal.find('#id_field').val($(this).data('id'));  
+    modal.find('#name_field').val($(this).data('name')); 
+    modal.find('#date_field').val($(this).data('date'));
+
+ 
+    var projectDate = $(this).data('date');
+    if (projectDate) {
+        var formattedDate = new Date(projectDate).toISOString().split('T')[0];
+        modal.find('#date_field').val(formattedDate);
+    }
+
+
+    $(targetModal).modal('show');
+});
+
+
+$(document).on('click', '.add-btn', function () {
+    var targetModal = $(this).data('target'); 
+    resetModalFields(targetModal); 
+    
+    var modal = $(targetModal);
+
+   
+    modal.find('.modal-title').text("إضافة بيانات جديدة");
+    modal.find('input[name="form_type"]').val('add');  
+
+    $(targetModal).modal('show');
+});
+
+
+
+function resetModalFields(modalId) {
+    $(modalId).find("input, textarea, select").val(""); 
+}
+
+
+$('#addEducationModal').on('hidden.bs.modal', function () {
+    resetModalFields('#addEducationModal');
+});
+$('#addExperienceModal').on('hidden.bs.modal', function () {
+    resetModalFields('#addExperienceModal');
+});
+$('#addCertificateModal').on('hidden.bs.modal', function () {
+    resetModalFields('#addCertificateModal');
+});
+$('#addLanguageModal').on('hidden.bs.modal', function () {
+    resetModalFields('#addLanguageModal');
+});
+$('#addProjectModal').on('hidden.bs.modal', function () {
+    resetModalFields('#addProjectModal');
+});
+
+
+
+$(document).ready(function() {
+    // إضافة CSRF Token إلى جميع طلبات AJAX
+    $(document).ajaxSend(function(e, xhr, options) {
+        var csrfToken = $('input[name="csrfmiddlewaretoken"]').val(); 
+        xhr.setRequestHeader("X-CSRFToken", csrfToken);  
+    });
+});
+
+
+$.ajax({
+    url: '/your-url/', 
+    type: 'POST',
+    data: {
+        'key': 'value'  
+    },
+    headers: {
+        'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()  
+    },
+    success: function(response) {
+        console.log('تم إرسال البيانات بنجاح');
+    },
+    error: function(xhr, status, error) {
+        console.error("CSRF Error:", error);
+    }
+});
+
+</script>
+    
+
+
+
+    
+    <!-- Footer Start -->
+    {% include "layouts/footer.html" %}
+      
+    
+
+    
+
+{% endblock %}

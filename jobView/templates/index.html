@@ -1,0 +1,773 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+    <!-- Spinner Start -->
+    {% comment %} <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div> {% endcomment %}
+    <!-- Spinner End -->
+
+
+    <!-- Navbar Start -->
+    {% load static %}
+
+   
+
+<!-- Navbar Start -->
+{% include "layouts/navbar.html" %}
+<!-- Navbar End -->
+
+
+    
+  <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+
+  
+    <!-- Navbar End -->
+
+        <style>
+
+            .carousel-overlay {
+                background: rgba(43, 57, 64, 0.7);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+            
+            .modal-content {
+                border-radius: 10px;
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            
+            .modal-body {
+                background-color: #ffffff;
+            }
+            
+            .btn {
+                border-radius: 30px;
+            }
+            
+            @keyframes fadeIn {
+                from {
+                opacity: 0;
+                transform: scale(0.9);
+                }
+                to {
+                opacity: 1;
+                transform: scale(1);
+                }
+            }
+
+
+        .modal-content {
+            border-radius: 20px; /* الزوايا المستديرة */
+            overflow: hidden;
+            animation: slideInFromTop 0.8s ease-out;
+        }
+    
+        .modal-header {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+    
+        .modal-footer {
+            border-top: 2px solid rgba(0, 0, 0, 0.1);
+        }
+    
+        .form-control {
+            border-radius: 10px; /* الحقول بشكل دائري */
+        }
+    
+        .btn {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+    
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+    
+        @keyframes slideInFromTop {
+            from {
+                transform: translateY(-50%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    
+        .form-floating .form-control {
+            height: 60px;
+        }
+
+
+        .image-carousel {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            perspective: 1000px;
+        }
+    
+        .carousel-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            animation: rotateImages 6s infinite linear;
+        }
+    
+        .carousel-img {
+            width: 200px; 
+            height: 200px;
+            position: absolute;
+            border-radius: 50%;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    
+        .carousel-img:nth-child(1) { transform: rotateY(0deg) translateZ(150px); }
+        .carousel-img:nth-child(2) { transform: rotateY(90deg) translateZ(150px); }
+        .carousel-img:nth-child(3) { transform: rotateY(180deg) translateZ(150px); }
+        .carousel-img:nth-child(4) { transform: rotateY(270deg) translateZ(150px); }
+    
+        @keyframes rotateImages {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+    
+        .image-carousel:hover .carousel-container {
+            animation-play-state: paused;
+        }
+    
+        .image-carousel:hover .carousel-img {
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+        }
+    
+        .text-green-dark {
+            color: #176d28;
+            font-size: 32px;
+        }
+    
+        .text-dark {
+            color: #222;
+        }
+    
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #218838);
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+    
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            transform: scale(1.05);
+        }
+    
+
+        .job-item {
+        background: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        transition: all 0.3s ease-in-out;
+        border: 1px solid rgba(0, 128, 0, 0.1);
+        box-shadow: 0 4px 12px rgba(0, 128, 0, 0.1);
+    }
+
+
+    .job-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 128, 0, 0.2);
+    }
+
+
+    .company-logo img {
+        width: 65px;
+        height: 65px;
+        object-fit: cover;
+        border: 2px solid #28a745;
+        padding: 3px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .company-logo img:hover {
+        transform: scale(1.1);
+    }
+
+
+    .apply-btn {
+        background: linear-gradient(135deg, #28a745, #1e7e34);
+        border: none;
+        border-radius: 25px;
+        transition: all 0.3s ease-in-out;
+        font-size: 14px;
+    }
+
+    .apply-btn:hover {
+        background: linear-gradient(135deg, #1e7e34, #155d26);
+        transform: scale(1.05);
+    }
+
+
+    .job-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 250px;
+        display: block;
+    }
+
+
+    .text-dark {
+        color: #222;
+        font-size: 18px;
+    }
+
+    .text-muted {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .text-success {
+        color: #28a745 !important;
+    }
+    
+    .text-category {
+        color: black;
+        font-size: 14px;
+        font-weight: bold;
+        transition: color 0.3s ease-in-out;
+    }
+
+    .text-category:hover {
+        color: white;
+    }
+
+    .cat-item {
+        background: linear-gradient(135deg, #ffffff, #f5f5f5);
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+        padding: 15px;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .cat-item::before,
+    .cat-item::after {
+        content: "";
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 128, 0, 0.2); 
+        transition: all 0.4s ease-in-out;
+    }
+
+    .cat-item::before {
+        top: 0;
+        right: 0;
+        clip-path: polygon(100% 0, 0 0, 100% 100%);
+    }
+
+    .cat-item::after {
+        bottom: 0;
+        left: 0;
+        clip-path: polygon(0 100%, 0 0, 100% 100%);
+    }
+
+    .cat-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .cat-item:hover::before,
+    .cat-item:hover::after {
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 128, 0, 0.3);
+        clip-path: none;
+    }
+
+    .icon-box {
+        width: 55px !important;
+        height: 55px !important;
+    }
+
+    .icon-box i {
+        font-size: 26px !important;
+    }
+
+
+    .text-muted {
+        font-size: 12px;
+    }
+
+
+    .cat-item h6 {
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+        </style>
+    <!-- Carousel Start -->
+    <div class="container-fluid p-0">
+        <div class="owl-carousel header-carousel position-relative">
+          <div class="owl-carousel-item position-relative">
+            <img class="img-fluid" src="{% static 'img/px3.jpg' %}" loading="lazy" alt="carousel-image" style="  width: 100%;height: 500px;object-fit: cover; ">
+            <div class="carousel-overlay d-flex align-items-center">
+              <div class="container">
+                <div class="row justify-content-start">
+                  <div class="col-10 col-lg-8">
+                    <h1 class="display-3 text-white animated slideInDown mb-4" >وظائف المستقبل</h1>
+                    <p class="fs-5 fw-medium text-white mb-4 pb-2">
+                      "هل تبحث عن فرصة عمل تناسب مهاراتك؟ وظائف المستقبل هو وجهتك الأولى للعثور على الوظائف التي تحقق طموحاتك."
+                    </p>
+                    {%  if request.user.is_authenticated  %}
+
+                    {%  else %}
+                    <a href="{%  url 'register' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">ابحث عن وظيفة</a>
+                    <a href="{%  url 'register-employer' %}" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight" >أضف وظيفة</a>
+                    {%  endif  %}
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <div class="owl-carousel-item position-relative">
+            <img class="img-fluid" src="{% static 'img/carousel-1.jpg' %}" loading="lazy" alt="carousel-image"  style="  width: 100%;height: 500px;object-fit: cover; /* يملأ الحاوية ولكن قد يتم قص جزء من الصورة */">
+            <div class="carousel-overlay d-flex align-items-center">
+              <div class="container">
+                <div class="row justify-content-start">
+                  <div class="col-10 col-lg-8">
+                    <h1 class="display-3 text-white animated slideInDown mb-4">مكانك الأمثل لبناء مستقبلك المهني</h1>
+                    <p class="fs-5 fw-medium text-white mb-4 pb-2">
+                      "سواء كنت خريجاً حديثاً أو محترفاً ذو خبرة، لدينا الفرص التي تناسبك. قم بتصفح آلاف الوظائف من مختلف القطاعات."
+                    </p>
+                    {%  if request.user.is_authenticated  %}
+
+                    {%  else %}
+                    <a href="{%  url 'register' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">ابحث عن وظيفة</a>
+                    <a href="{%  url 'register-employer' %}" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight" >أضف وظيفة</a>
+                    {%  endif  %}
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="owl-carousel-item position-relative">
+            <img class="img-fluid" src="{% static 'img/carousel-2.jpg' %}" alt="carousel-image"  loading="lazy" style="  width: 100%;height: 500px;object-fit: cover; /* يملأ الحاوية ولكن قد يتم قص جزء من الصورة */">
+            <div class="carousel-overlay d-flex align-items-center">
+              <div class="container">
+                <div class="row justify-content-start">
+                  <div class="col-10 col-lg-8">
+                    <h1 class="display-3 text-white animated slideInDown mb-4">انطلق نحو مستقبل وظيفي مشرق</h1>
+                    <p class="fs-5 fw-medium text-white mb-4 pb-2">
+                      "استكشف فرص العمل التي تناسب مهاراتك وابدأ رحلتك المهنية اليوم. معنا، المستقبل بين يديك!"
+                    </p>
+
+                    {%  if request.user.is_authenticated  %}
+
+                    {%  else %}
+                    <a href="{%  url 'register' %}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">ابحث عن وظيفة</a>
+                    <a href="{%  url 'register-employer' %}" class="btn btn-secondary py-md-3 px-md-5 animated slideInRight" >أضف وظيفة</a>
+                    {%  endif  %}
+
+                    
+              
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+{% comment %}  end {% endcomment %}
+    
+    
+
+    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  
+  <script>
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('addJobModal');
+    
+        modal.addEventListener('show.bs.modal', () => {
+            if (typeof bootstrapCarousel !== "undefined") {
+                const carousel = document.querySelector('.carousel');
+                if (carousel) {
+                    bootstrapCarousel.pause();
+                }
+            }
+    
+            modal.classList.remove('animate__fadeOutUp');
+            modal.classList.add('animate__animated', 'animate__fadeInDown');
+        });
+    
+        modal.addEventListener('hide.bs.modal', () => {
+            if (typeof bootstrapCarousel !== "undefined") {
+                const carousel = document.querySelector('.carousel');
+                if (carousel) {
+                    bootstrapCarousel.cycle();
+                }
+            }
+    
+            // إضافة تأثير الإغلاق
+            modal.classList.remove('animate__fadeInDown');
+            modal.classList.add('animate__animated', 'animate__fadeOutUp');
+        });
+    });
+
+
+  </script>
+
+
+    <!-- Carousel End -->
+
+
+    <!-- Search Start -->
+    <!-- <div class="container-fluid bg-primary mb-5 wow fadeIn" data-wow-delay="0.1s" style="padding: 35px;">
+        <div class="container">
+            <div class="row g-2">
+                <div class="col-md-10">
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control border-0" placeholder="Keyword" />
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-select border-0">
+                                <option selected>نوع الوظيفة</option>
+                                <option value="1">Category 1</option>
+                                <option value="2">Category 2</option>
+                                <option value="3">Category 3</option>
+                            </select>
+                        </div>
+                
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-dark border-0 w-100">بحث</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- Search End -->
+
+
+<!-- Category Start -->
+<div class="container-xxl py-4">
+    <div class="container">
+        <h2 class="text-center mb-4 wow fadeInUp" data-wow-delay="0.05s" style="color: darkgreen;">
+            وظائف خالية لجميع التخصصات
+        </h2>
+        <div class="row g-3 text-center">
+            {% for catg in categories %}
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <a class="cat-item d-block p-3 rounded-3 position-relative overflow-hidden wow fadeInUp"
+                    data-wow-delay="{{ forloop.counter|add:0.01 }}s"
+                    href="{% url 'job-list' catg.slug %}"
+                    style="transition: all 0.2s ease-in-out; border: 0;">
+
+                        <div class="icon-box mb-2 d-flex justify-content-center align-items-center mx-auto rounded-circle"
+                            style="width: 60px; height: 60px; background: rgba(0, 128, 0, 0.1); transition: all 0.2s;">
+                            <i class="{{ catg.icon_class }} text-success" style="font-size: 28px;"></i>
+                        </div>
+
+                        <h6 class="mb-1 text-category">{{ catg.name }}</h6>
+
+                        {% with catg.id as category_id %}
+                            {% for category in categories_with_job_count %}
+                                {% if category.id == category_id %}
+                                    {% if category.job_count > 0 %}
+                                        <p class="text-muted small mb-0">{{ category.job_count }} </p>
+                                    {% else %}
+                                        <p class="text-muted small mb-0">غير متاح حالياً</p>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+
+                        <div class="hover-effect"></div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</div>
+
+
+
+    
+    
+    
+    <!-- Category End -->
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+<!-- About Start -->
+
+<!-- About Start -->
+<div class="container-xxl py-5  mt-3">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+         
+            <div class="col-lg-5 wow fadeInLeft" data-wow-delay="0.1s">
+                <div class="image-carousel">
+                    <div class="carousel-container">
+                        <img class="carousel-img lazyload" data-src="{% static 'img/about-1.jpg' %}" alt="Image 1">
+                        <img class="carousel-img lazyload" data-src="{% static 'img/about-2.jpg' %}" alt="Image 2">
+                        <img class="carousel-img lazyload" data-src="{% static 'img/about-3.jpg' %}" alt="Image 3">
+                        <img class="carousel-img lazyload" data-src="{% static 'img/about-4.jpg' %}" alt="Image 4">
+                    </div>
+                </div>
+            </div>
+
+  
+            <div class="col-lg-7 wow fadeInRight" style="direction: rtl;" data-wow-delay="0.3s">
+                <h1 class="mb-4  fw-bold" style="color:darkgreen">نساعدك في الحصول على أفضل الوظائف وبناء مسارك المهني</h1>
+                <p class="mb-4 text-dark fs-5">نحن هنا لمساعدتك في العثور على الفرص المناسبة التي تناسب مؤهلاتك وطموحاتك. سواء كنت تبحث عن وظيفة أحلامك أو تسعى لتطوير مسيرتك المهنية، نحن نوفر لك المنصة التي تحتاجها لتحقيق أهدافك.</p>
+                <ul class="list-unstyled fs-5">
+                    <li><i class="fa fa-check-circle text-success me-2"></i> احصل على فرص عمل تناسب خبراتك.</li>
+                    <li><i class="fa fa-check-circle text-success me-2"></i> قدّم سيرتك الذاتية وابدأ طريقك نحو النجاح.</li>
+                    <li><i class="fa fa-check-circle text-success me-2"></i> تواصل مع الشركات التي تبحث عن كفاءات متميزة.</li>
+                </ul>
+                <a class="btn btn-success py-3 px-5 mt-3 fw-bold" href="#">حمل سيرتك الذاتية</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->
+
+
+
+
+
+
+
+<!-- Jobs Start -->
+<div class="container-xxl py-2">
+    <div class="container" style="direction: rtl;">
+        <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s" style="color: darkgreen;"> قائمة الوظائف  </h1>
+        <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.3s">
+            <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
+                <li class="nav-items">
+                    <a class="d-flex align-items-center text-start mx-3 pb-3 {% if careey_type == 'full_time' %}active{% endif %}" 
+                       href="?careey_types=full_time">
+                        <h6 class="mt-n1 mb-0">دوام كامل</h6>
+                    </a>
+                </li>
+                <li class="nav-items">
+                    <a class="d-flex align-items-center text-start mx-3 pb-3 {% if careey_type == 'part_time' %}active{% endif %}" 
+                       href="?careey_types=part_time">
+                        <h6 class="mt-n1 mb-0">دوام جزئي</h6>
+                    </a>
+                </li>
+                <li class="nav-items">
+                    <a class="d-flex align-items-center text-start mx-3 pb-3 {% if careey_type == 'on_site' %}active{% endif %}" 
+                       href="?careey_types=on_site">
+                        <h6 class="mt-n1 mb-0">عمل مكتبي</h6>
+                    </a>
+                </li>
+                <li class="nav-items">
+                    <a class="d-flex align-items-center text-start mx-3 pb-3 {% if not careey_type %}active{% endif %}" 
+                       href="?">
+                        <h6 class="mt-n1 mb-0">الكل</h6>
+                    </a>
+                </li>
+            </ul>
+            
+            
+            <div class="tab-content">
+                <div class="container">
+                    <div id="tab-2" class="tab-pane fade show p-0 active">
+                        <div id="jobs-container">
+                            {% for job in jobs_get %}
+                            <div class="job-item p-4 mb-4 shadow-sm rounded">
+                                <div class="row g-4 align-items-center">
+                                    <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                        <div class="company-logo me-3">
+                                            {% if job.employer.logo %}
+                                            <img class="img-fluid rounded-circle border" src="{{ job.employer.logo.url }}" alt="{{ job.title }}">
+                                            {% else %}
+                                            <img class="img-fluid rounded-circle border" src="{% static 'img/company.png' %}" alt="{{ job.title }}">
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-start">
+                                            <h5 class="mb-2 text-dark fw-bold job-title" title="{{ job.title }}">{{ job.title }}</h5>
+                                            <div class="d-flex text-muted small">
+                                                <span class="me-3"><i class="fa fa-map-marker-alt text-success me-1"></i>{{ job.location }}</span>
+                                                <span class="me-3"><i class="far fa-clock text-success me-1"></i>{{ job.get_career_type_display }}</span>
+                                                <span><i class="far fa-money-bill-alt text-success me-1"></i>{{ job.salary }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end">
+                                        <a class="btn btn-success btn-sm px-4 py-2 fw-bold apply-btn" href="{% url 'job-details' job.slug %}">تقدم الآن</a>
+                                        <small class="text-muted"><i class="far fa-calendar-alt text-success me-1"></i>الموعد النهائي: {{ job.closing_date|date:"d M Y" }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <style>
+
+            </style>
+            
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="container">
+        <h1 class="text-center mb-5" style="color: darkgreen;">آراء عملائنا</h1>
+        <div class="owl-carousel testimonial-carousel">
+            <div class="testimonial-item bg-light rounded p-4">
+                <i class="fa fa-quote-left fa-2x text-success mb-3"></i>
+                <p>بفضل هذا الموقع، تمكنت من العثور على وظيفة مناسبة في وقت قصير. كانت التجربة سلسة وسهلة، وتمكنت من التواصل مباشرة مع أصحاب العمل.</p>
+                <div class="d-flex align-items-center">
+                    <img class="img-fluid flex-shrink-0 rounded" src={% static "img/testimonial-1.jpg" %} style="width: 50px; height: 50px;">
+                    <div class="ps-3">
+                        <h5 class="mb-1">أحمد حسن</h5>
+                        <small>باحث عن عمل</small>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-item bg-light rounded p-4">
+                <i class="fa fa-quote-left fa-2x text-success mb-3"></i>
+                <p>منصة رائعة! قمت بنشر إعلان وظيفي وتمكنت من الحصول على مرشحين مؤهلين بسرعة. أنصح بها لكل صاحب عمل يبحث عن كفاءات.</p>
+                <div class="d-flex align-items-center">
+                    <img class="img-fluid flex-shrink-0 rounded" src={% static "img/testimonial-2.jpg" %} style="width: 50px; height: 50px;">
+                    <div class="ps-3">
+                        <h5 class="mb-1">منى الرفاعي</h5>
+                        <small>مديرة موارد بشرية</small>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-item bg-light rounded p-4">
+                <i class="fa fa-quote-left fa-2x text-success mb-3"></i>
+                <p>الموقع ساعدني في تطوير مسيرتي المهنية من خلال الدورات التدريبية المتاحة وفرص العمل المناسبة لمهاراتي.</p>
+                <div class="d-flex align-items-center">
+                    <img class="img-fluid flex-shrink-0 rounded" src={% static  "img/testimonial-3.jpg" %} style="width: 50px; height: 50px;">
+                    <div class="ps-3">
+                        <h5 class="mb-1">سالم الخطيب</h5>
+                        <small>مطور برمجيات</small>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-item bg-light rounded p-4">
+                <i class="fa fa-quote-left fa-2x text-success mb-3"></i>
+                <p>خدمة الدعم الفني سريعة ومتجاوبة، والموقع يقدم تجربة مستخدم ممتازة. أشكر القائمين على هذه المنصة الرائعة.</p>
+                <div class="d-flex align-items-center">
+                    <img class="img-fluid flex-shrink-0 rounded" src="{% static "img/testimonial-4.jpg" %}" style="width: 50px; height: 50px;">
+                    <div class="ps-3">
+                        <h5 class="mb-1">ليلى الكردي</h5>
+                        <small>مصممة جرافيك</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const filterLinks = document.querySelectorAll(".nav-items a"); 
+                const jobsContainer = document.querySelector("#jobs-container"); 
+            
+                filterLinks.forEach(link => {
+                    link.addEventListener("click", function (event) {
+                        event.preventDefault(); 
+                        
+                        const url = this.getAttribute("href"); 
+                        fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } }) 
+                            .then(response => response.text()) 
+                            .then(data => {
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(data, "text/html");
+                                const newJobs = doc.querySelector("#jobs-container"); 
+                                if (newJobs) {
+                                    jobsContainer.innerHTML = newJobs.innerHTML; 
+                                }
+                            })
+                            .catch(error => console.error("Error fetching jobs:", error));
+                    });
+                });
+            });
+            
+        </script>
+
+
+
+<!-- Footer Start -->
+{% include "layouts/footer.html" %}
+
+
+{%  endblock %}
+
+
+
+
+
+
+
+
+
+
+
+

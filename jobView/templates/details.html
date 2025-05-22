@@ -1,0 +1,201 @@
+{% extends "layouts/basic.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block content %}
+
+   <!-- Spinner Start -->
+   <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<!-- Spinner End -->
+
+  <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+
+
+
+<!-- Navbar Start -->
+{% include "layouts/navbar.html" %}
+<!-- Navbar End -->
+
+
+
+
+        <!-- Header End -->
+        <div class="container-xxl py-5 bg-dark page-header mb-5">
+            <div class="container my-5 pt-5 pb-4">
+                <h1 class="display-3 text-white mb-3 animated slideInDown">تفاصيل الوظيفة</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb text-uppercase">
+          
+                        <li class="breadcrumb-item"><a href="{% url "home" %}">الصفحة الرئيسية</a></li>
+                        <li class="breadcrumb-item">  <a href="{% url 'job-list' slug=job.job_category.slug %}?{{ request.GET.urlencode }}"> قائمة الوظائف</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page"> تفاصيل الوظيفة </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+        <!-- Header End -->
+
+
+  <!-- Job Detail Start -->
+<div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s"   style="direction: rtl;">
+    <div class="container">
+        <div class="row gy-5 gx-4">
+            <!-- القسم الرئيسي -->
+            <div class="col-lg-8" >
+               
+                    
+                <div class="">
+                <h4 class="mb-1">المسمى الوظيفي: 
+                    <b style="color: black ;">{{ job.title }}</b>
+                </h4>
+                {% comment %} <span class="mx-3">|</span> <!-- فاصل بين المسمى واسم الشركة -->
+                <h4 class="mb-1">اسم الشركة: 
+                    <b style="color:black;">{{ job.employer.company_name }}</b> <!-- لون أزرق لاسم الشركة -->
+                </h4> {% endcomment %}
+            </div>
+                     
+                <div class="mb-5 mt-5">
+                    <h4 class="mb-3">وصف الوظيفية</h4>
+                    <p>{{ job.job_description }}</p>
+                
+                    <h4 class="mb-3">المؤهلات</h4>
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-angle-right text-primary me-2"></i>{{ job.get_education_display }}</li>
+                        <li><i class="fa fa-angle-right text-primary me-2"></i>{{ job.get_career_level_display }}</li>
+                        <li><i class="fa fa-angle-right text-primary me-2"></i>سنوات الخبرة: من {{ job.years_of_experience_from }} إلى {{ job.years_of_experience_to }}</li>
+                        <li><i class="fa fa-angle-right text-primary me-2"></i>الجنس: {{ job.get_gender_display }}</li>
+                    </ul>
+                </div>
+
+                <div class="container">
+
+                    {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+                    <h4 class="mb-4">قدم على الوظيفة</h4>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <!-- اسم المتقدم -->
+                            <div class="col-12 col-sm-6">
+                                <input type="text" class="form-control" name="full_name"  value="{{request.user.username}}"  placeholder="اسمك الكامل" required>
+                            </div>
+                
+                            <!-- البريد الإلكتروني -->
+                            <div class="col-12 col-sm-6">
+                                <input type="email" class="form-control" name="email" value="{{request.user.email}}" placeholder="بريدك الإلكتروني" required>
+                            </div>
+                
+                            <!-- رقم الهاتف -->
+                            <div class="col-12 col-sm-6">
+                                <input type="text" class="form-control" name="phone_number" placeholder="رقم الهاتف" required>
+                            </div>
+                
+                
+                            <!-- خطاب التغطية -->
+                            <div class="col-12">
+                                <textarea class="form-control" name="cover_letter" rows="5" placeholder="خطاب التغطية" required></textarea>
+                            </div>
+                
+                            <!-- ملاحظات إضافية (اختياري) -->
+                            <div class="col-12">
+                                <textarea class="form-control" name="notes" rows="3" placeholder="ملاحظات إضافية (اختياري)"></textarea>
+                            </div>
+                            {% if user.is_authenticated %}
+                            {% if is_employer %}
+                                <p class="text-danger">❌ لا يمكنك التقديم على الوظائف لأن حسابك حساب شركة.</p>
+                            {% else %}
+                                {% if can_apply %}
+                                    <!-- زر التقديم -->
+                                    <div class="col-12">
+                                        <button class="btn btn-primary w-100" type="submit">قدم الآن</button>
+                                    </div>
+                                {% else %}
+                                    <p class="text-danger">⚠️ لقد قدمت على هذه الوظيفة سابقًا ولا يمكنك التقديم مرة أخرى قبل مرور ثلاث أشهر.</p>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <p class="text-warning">🔑 يجب عليك <a href="{% url 'logins' %}">تسجيل الدخول</a> لتتمكن من التقديم على الوظائف.</p>
+                        {% endif %}
+                        
+                        
+                        
+                        </div>
+                    </form>
+                </div>
+                
+                {% if messages %}
+                    <div class="alert alert-success mt-3" role="alert">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            
+            </div>
+
+            <!-- القسم الجانبي -->
+            <div class="col-lg-4" style="direction: rtl;">
+                <div class="bg-light rounded p-5 mb-4 wow slideInUp" data-wow-delay="0.1s">
+                    <h4 class="mb-4">ملخص الوظيفة</h4>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>تاريخ النشر: {{ job.publication_date }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>الجنس: {{ job.get_gender_display }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>نوع الوظيفة: {{ job.get_career_type_display }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>الراتب: {{ job.salary }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>الموقع: {{ job.location }}</p>
+                    <p class="m-0"><i class="fa fa-angle-right text-primary me-2"></i>تاريخ الإغلاق: {{ job.closing_date }}</p>
+                </div>
+                <div class="bg-light rounded p-5 wow slideInUp" data-wow-delay="0.2s">
+                    <h4 class="mb-4">تفاصيل الشركة</h4>
+                
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>اسم الشركة: {{ job.employer.company_name }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>اسم الشخص المسؤول: {{ job.employer.name_of_responsible_person }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>رقم الهاتف: {{ job.employer.phone_number }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>الولاية: {{ job.employer.state }}</p>
+                    <p><i class="fa fa-angle-right text-primary me-2"></i>المحافظة: {{ job.employer.governorate }}</p>
+                
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Job Detail End -->
+
+
+
+
+
+  <!-- Footer Start -->
+  {% include "layouts/footer.html" %}
+        
+{% endblock  %}

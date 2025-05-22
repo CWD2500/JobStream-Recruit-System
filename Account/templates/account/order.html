@@ -1,0 +1,87 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+    <!-- Navbar Start -->
+    {% include "layouts/navbar.html" %}
+    <!-- Navbar End -->
+
+ <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+
+    <div class="container">
+        
+
+            <h2 class="text-center text-primary mt-5">      طلبات التوظيف الخاصة بي  </h2>
+
+    <table class="table mt-5">
+        <thead>
+            <tr style="color: black;font-size: 18px; font-weight: 800;">
+            <th scope="col">#</th>
+            <th scope="col">اسم الوظيفي</th>
+            <th scope="col">اسم الشركة</th>
+            <th scope="col">تاريخ التقديم </th>
+            <th scope="col"> حالة الطلب  </th>
+            <th scope="col">  الحدث  </th>
+          </tr>
+        </thead>
+        <tbody>
+            {%  for  orders in user_orders %}
+          <tr style="color: black;font-size: 16px; font-weight: 600;">
+            <th scope="row">1</th>
+            <td>   {{ orders.job.title }} </td>
+            <td>  {{ orders.job.employer.company_name  }}</td>
+            <td> {{ orders.create_at   }} </td>
+            {% if orders.status == "pending" %}
+            <td style="color:blue">{{ orders.get_status_display }}</td>
+        {% elif orders.status == "accepted" %}
+            <td style="color:green">{{ orders.get_status_display }}😄</td>
+        {% else %}
+            <td style="color:red">{{ orders.get_status_display }}</td>
+        {% endif %}
+        {% if orders.status == "pending" %}
+            <td>
+                 <p href=" " class="text-small">      لا يمكن حذف الطلب إلا بعد المواققة او الرفض  </p>
+            </td>
+            {% elif orders.status == "accepted" %}
+            <td>
+              <a href="{%   url 'orders-delete'  orders.id  %}" class="btn btn-danger">  حذف </a>
+            </td>
+           {%   elif orders.status == "rejected" %}
+            <td>
+               <a href=" {%   url 'orders-delete'  orders.id  %}" class="btn btn-danger"> حذف   </a>
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+       
+
+        </tbody>
+      </table>
+
+    </div>
+
+
+
+    <!-- Footer Start -->
+    {% include "layouts/footer.html" %}
+        
+
+{%  endblock %}

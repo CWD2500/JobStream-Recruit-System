@@ -1,0 +1,25 @@
+Front-End Developer  
+icno : fas fa-code
+Back-End Developer
+icon: fas fa-database
+UI/UX Designer 
+icon: fas fa-paint-brush
+Project Manager
+icon:fas fa-tasks
+Mobile Developer
+icon:fas fa-mobile-alt
+Cybersecurity Specialist 
+icon:fas fa-shield-alt
+Data Scientist
+icon:fas fa-chart-line
+DevOps Engineer  
+fas fa-server
+Tester  
+icon:fas fa-bug
+Cloud Engineer  
+icon:fas fa-cloud
+
+Technical Writer 
+icon:fas fa-file-alt
+
+

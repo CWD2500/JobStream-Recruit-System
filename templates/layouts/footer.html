@@ -1,0 +1,148 @@
+<footer class="footer bg-black text-light pt-5 mt-5">
+    <div class="container py-5">
+        <div class="row g-4">
+      
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-white fw-bold mb-4 footer-title">وظائف المستقبل</h5>
+                <p class="text-white-50">نساعدك في العثور على أفضل الفرص المهنية، ونوفر لك الأدوات التي تحتاجها لتحقيق النجاح في سوق العمل.</p>
+            </div>
+
+           
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-white fw-bold mb-4 footer-title">روابط سريعة</h5>
+                <ul class="list-unstyled">
+                    <li><a class="footer-link" href="#">الرئيسية</a></li>
+                    <li><a class="footer-link" href="#">من نحن</a></li>
+                    <li><a class="footer-link" href="#">الخدمات</a></li>
+                    <li><a class="footer-link" href="#">سياسة الخصوصية</a></li>
+                    <li><a class="footer-link" href="#">الشروط والأحكام</a></li>
+                </ul>
+            </div>
+
+   
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-white fw-bold mb-4 footer-title">تواصل معنا</h5>
+                <p><i class="fa fa-map-marker-alt text-success me-2"></i> دمشق، سوريا</p>
+                <p><i class="fa fa-phone-alt text-success me-2"></i> +963 987 654 321</p>
+                <p><i class="fa fa-envelope text-success me-2"></i> info@futurejobs.com</p>
+                <div class="d-flex">
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-outline-light btn-social mx-1" href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <h5 class="text-white fw-bold mb-4 footer-title">اشترك معنا</h5>
+                <p class="text-white-50">احصل على أحدث الوظائف مباشرة إلى بريدك الإلكتروني.</p>
+         
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row text-center text-md-start">
+            <div class="col-md-6">
+                <p class="mb-0">&copy; 2025 وظائف المستقبل. جميع الحقوق محفوظة.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a class="footer-link mx-2" href="#">سياسة الخصوصية</a>
+                <a class="footer-link mx-2" href="#">الشروط والأحكام</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background:  rgb(43, 57, 64) !important;
+        padding-bottom: 20px;
+        border-top: 6px solid #065a00;
+        position: relative;
+        overflow: hidden;
+      
+    }
+
+    .footer-title {
+        position: relative;
+        display: inline-block;
+        transition: text-shadow 0.3s ease-in-out;
+    }
+
+    .footer-title:hover {
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.9);
+    }
+
+    .footer-link {
+        color: #bbb;
+        text-decoration: none;
+        transition: color 0.3s ease, transform 0.3s ease;
+        display: block;
+        padding: 5px 0;
+        font-weight: bold;
+    }
+
+    .footer-link:hover {
+        color: #fff;
+        transform: translateX(8px);
+    }
+
+
+    .btn-social {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s ease, transform 0.3s ease;
+        border: 2px solid #0c9400;
+    }
+
+    .btn-social:hover {
+        background: #0c9400;
+        color: #ffffff !important;
+        transform: scale(1.2);
+    }
+
+   
+    .subscribe-btn {
+        border-radius: 25px;
+        animation: pulse 1.5s infinite alternate;
+        padding: 10px 20px;
+        font-weight: bold;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.12); }
+    }
+
+
+    .footer::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 120%;
+        height: 14px;
+        background: linear-gradient(to right, transparent, #0c9400, transparent);
+        animation: moveLight 2s infinite linear;
+    }
+
+    @keyframes moveLight {
+        0% { left: -120%; }
+        100% { left: 120%; }
+    }
+
+ 
+    @media (max-width: 768px) {
+        .footer-link {
+            text-align: center;
+        }
+        .btn-social {
+            margin: 5px auto;
+        }
+    }
+</style>

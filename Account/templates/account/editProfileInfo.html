@@ -1,0 +1,391 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+    <!-- Navbar Start -->
+    {% include "layouts/navbar.html" %}
+    <!-- Navbar End -->
+
+
+
+    <style>
+    .custom-card {
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 85rem;
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+}
+
+.form-floating label {
+    position: absolute;
+    top: -15px;
+    right: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #000000;
+    /* background-color: white; */
+    padding: 0 10px;
+    transition: 0.3s ease-in-out;
+}
+
+input, select, textarea {
+    border-radius: 8px;
+    padding: 12px;
+    color: #000000;
+    border: 1px solid #ced4da;
+    width: 100%;
+    font-size: 1rem;
+    transition: all 0.3s ease-in-out;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color:  #0c9d0c !important;
+    box-shadow: 0 0 8px  #0c9d0c !important;
+}
+
+
+
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-secondary:hover {
+    opacity: 0.9;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+    .form-group .form-floating {
+        flex: 1 0 48%;
+        margin-right: 2%;
+    }
+
+    .form-group .form-floating:last-child {
+        margin-right: 0;
+    }
+}
+
+input[type="file"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+
+    
+    </style>
+ <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+<div class="container-fluid   mt-3" style="direction: rtl;">
+    <div class="row justify-content-center ">
+        <div class="col-md-10  ">
+            <div class="card custom-card ">
+                <div class="card-header text-white text-center"
+                    style="border-radius: 10px; background: linear-gradient(to right, #0c9d0c, #015e01);">
+                    <h4 class="card-title text-white">تعديل المعلومات الشخصية</h4>
+                </div>
+
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row mt-3">
+                    <!--   username  -->
+                    <div class="row mt-3">
+                        <div class="col-md-6 ">
+                            <div class="form-floating mb-2">
+                                <input type="text" class="" name="username"
+                                    value="{{ profile.user|default:'' }}" id="username"
+                                    placeholder="اسم المستخدم" required>
+                                <label for="username">  اسم المستخدم *</label>
+                              <div class="invalid-feedback" id="usernameError">يرجى عدم إدخال أرقام في الاسم</div>
+
+                            </div>
+                        </div>
+                        <!--   Emil  -->
+                   
+                        <div class="col-md-6 ">
+                            <div class="form-floating mb-2">
+                                <input type="email" class="" name="email"
+                                    value="{{ profile.user.email|default:'' }}" id="email"
+                                    placeholder="البريد الالكتروني" required>
+                                <label for="data_of_brith"> البريد الالكتروني *</label>
+                                 <div class="invalid-feedback" id="emailError">يرجى إدخال بريد إلكتروني صالح</div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                        <!-- تاريخ الميلاد -->
+                        <div class="row mt-3">
+                            <div class="col-md-6 ">
+                                <div class="form-floating mb-2">
+                                    <input type="date" class="" name="data_of_brith"
+                                    value="{{ profile.data_of_brith|date:'Y-m-d' }}" id="data_of_brith"
+                                     id="data_of_brith"
+                                        placeholder="تاريخ الميلاد" required>
+                                    <label for="data_of_brith">تاريخ الميلاد *</label>
+                                </div>
+                            </div>
+
+                            <!-- عدد سنوات الخبرة -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="number" class="" name="Number_of_years_of_experience"
+                                        value="{{ profile.Number_of_years_of_experience|default:'' }}"
+                                        id="Number_of_years_of_experience" placeholder="الخبرة" required>
+                                    <label for="Number_of_years_of_experience">الخبرة *</label>
+                                        <div class="invalid-feedback" id="Number_of_years_of_experienceError">يرجى إدخال رقم صالح</div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- الحد الأدنى للراتب -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="" id="minimum_salary"
+                                        value="{{ profile.minimum_salary|default:'' }}" name="minimum_salary"
+                                        placeholder="الحد الأدنى للراتب" required>
+                                    <label for="minimum_salary">الحد الأدنى للراتب *</label>
+                                    {% comment %} <div class="invalid-feedback" id="minimum_salaryError">يرجى إدخال رقم فقط في الراتب</div> {% endcomment %}
+
+                                </div>
+                            </div>
+
+                            <!-- الجنس -->
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender1"
+                                            value="male" {% if profile.gender == "male" %} checked {% endif %}>
+                                        <label class="form-check-label" for="gender1">ذكر</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender2"
+                                            value="female" {% if profile.gender == "female" %} checked {% endif %}>
+                                        <label class="form-check-label" for="gender2">أنثى</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- الجنسية -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select class="" id="nationality" name="nationality" required>
+                                        <option value="" disabled {% if not profile.nationality %} selected {% endif %}>
+                                            اختر الجنسية</option>
+                                        {% for code, name in nationalities %}
+                                        <option value="{{ code }}" {% if profile.nationality == code %} selected {% endif %}>
+                                            {{ name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label for="nationality">الجنسية *</label>
+                                </div>
+                            </div>
+
+                            <!-- الدولة -->
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="" name="state"
+                                        value="{{ profile.state|default:'' }}" id="state" placeholder="الدولة" required>
+                                    <label for="state">الدولة *</label>
+                               <div class="invalid-feedback" id="stateError">يرجى عدم إدخال أرقام في الدولة</div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- المحافظة والمدينة -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="" name="governorate"
+                                        value="{{ profile.governorate|default:'' }}" id="governorate"
+                                        placeholder="المحافظة" required>
+                                    <label for="governorate">المحافظة *</label>
+                                    <div class="invalid-feedback" id="governorateError">يرجى عدم إدخال أرقام في المحافظة</div>
+
+                                </div>
+                            </div>
+
+                
+
+
+                               <!-- رفع صورة -->
+                        <div class="col-6">
+                            <div class="form-floating mb-3">
+                                <input type="file" class="" id="picture"  name="picture"  
+                                    value="{{ profile.picture|default:'' }}" >
+                                <label for="picture">ادخل صورة *</label>
+                                <div id="pictureError" class="invalid-feedback" style="display: none;"></div>
+                            </div>
+                        </div>
+
+
+
+
+                        <!-- العنوان  -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="" name="location"
+                                        value="{{ profile.location|default:'' }}" id="location" placeholder="العنوان"
+                                        required>
+                                    <label for="location">العنوان *</label>
+                                    <div class="invalid-feedback" id="locationError">يرجى عدم إدخال أرقام في العنوان</div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="" id="phone" name="phone_Number"
+                                        value="{{ profile.phone_Number|default:'' }}" placeholder="رقم الجوال" required>
+                                    <label for="phone">رقم الجوال *</label>
+                                     <div class="invalid-feedback" id="phoneError">يرجى إدخال أرقام فقط في رقم الجوال</div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                     
+                        <!-- الوصف -->
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                <textarea class="" name="description" id="description" placeholder="المسمى الوظيفي"
+                                    required style="height: 100px;">{{profile.description}}</textarea>
+                                <label for="description">الوصف *</label>
+                                 <div class="invalid-feedback" id="descriptionError">يرجى عدم إدخال أرقام في الوصف</div>
+
+                            </div>
+                        </div>
+
+                        <!-- الأزرار -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" id="submitBtn"  class="btn  w-100 is-invalid" style="border-radius: 10px;    background-color:  #0c9d0c !important;color: white;">تحديث البيانات</button>
+                            </div>
+                            <div class="col-md-6">
+                                <a  href="{% url 'profile-users' profile.slug %}" class="btn btn-secondary w-100 "style="border-radius: 10px;">إلغاء</a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div> 
+            </div> 
+        </div> 
+    </div>
+</div> 
+
+<script>
+  const submitBtn = document.getElementById('submitBtn');
+
+const fields = {
+    username: { type: "text", regex: /^[^\d]+$/, message: "يرجى عدم إدخال أرقام في الاسم" },
+    state: { type: "text", regex: /^[^\d]+$/, message: "يرجى عدم إدخال أرقام في الدولة" },
+    governorate: { type: "text", regex: /^[^\d]+$/, message: "يرجى عدم إدخال أرقام في المحافظة" },
+    location: { type: "text", regex: /^[^\d]+$/, message: "يرجى عدم إدخال أرقام في العنوان" },
+    description: { type: "text", regex: /^[^\d]+$/, message: "يرجى عدم إدخال أرقام في الوصف" },
+    email: { type: "email", regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "يرجى إدخال بريد إلكتروني صالح" },
+    phone: { 
+        type: "number", 
+        regex: /^\d{6,15}$/, 
+        message: "يجب أن يحتوي رقم الجوال على 6 إلى 15 رقم" 
+    },
+    Number_of_years_of_experience: { type: "number", regex: /^\d+$/, message: "يرجى إدخال رقم صالح للخبرة" },
+    minimum_salary: { type: "number", regex: /^\d+$/, message: "يرجى إدخال رقم فقط في الراتب" }
+};
+
+function validateForm() {
+    let isValid = true;
+
+    Object.entries(fields).forEach(([id, config]) => {
+        const input = document.getElementById(id);
+        const error = document.getElementById(id + "Error");
+
+        if (!input || !error) return;
+
+        const value = input.value.trim();
+
+        if (!value || !config.regex.test(value)) {
+            isValid = false;
+            input.classList.add("is-invalid");
+            error.textContent = config.message;
+            error.style.display = "block";
+        } else {
+            input.classList.remove("is-invalid");
+            error.style.display = "none";
+        }
+    });
+
+    const pictureInput = document.getElementById("picture");
+    const pictureError = document.getElementById("pictureError");
+    if (pictureInput && pictureError) {
+        const file = pictureInput.files[0];
+        if (file) {
+            const allowedTypes = ['image/jpeg', 'image/png'];
+            if (!allowedTypes.includes(file.type)) {
+                isValid = false;
+                pictureInput.classList.add("is-invalid");
+                pictureError.textContent = "يرجى رفع صورة فقط (jpg, png)";
+                pictureError.style.display = "block";
+            } else {
+                pictureInput.classList.remove("is-invalid");
+                pictureError.style.display = "none";
+            }
+        }
+    }
+
+    submitBtn.disabled = !isValid;
+}
+
+Object.keys(fields).forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+        input.addEventListener("input", validateForm);
+        input.addEventListener("change", validateForm);
+    }
+});
+
+const pictureInput = document.getElementById("picture");
+if (pictureInput) {
+    pictureInput.addEventListener("change", validateForm);
+}
+
+window.addEventListener("load", () => {
+    validateForm();
+});
+
+</script>
+
+
+
+{% endblock  %}

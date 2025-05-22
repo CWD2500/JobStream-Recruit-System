@@ -1,0 +1,520 @@
+{% extends "layouts/basic.html" %}
+{% load django_bootstrap5 %}
+{% load static %}
+{% block content %}
+
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div> 
+    <!-- Spinner End -->
+
+
+
+
+
+    <!-- Navbar Start -->
+    {% include "layouts/navbar.html" %}
+    <!-- Navbar End -->
+
+
+    <style>
+
+        .carousel-overlay {
+            background: rgba(43, 57, 64, 0.7);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .modal-content {
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .modal-body {
+            background-color: #ffffff;
+        }
+        
+        .btn {
+            border-radius: 30px;
+        }
+        
+        @keyframes fadeIn {
+            from {
+            opacity: 0;
+            transform: scale(0.9);
+            }
+            to {
+            opacity: 1;
+            transform: scale(1);
+            }
+        }
+
+
+    .modal-content {
+        border-radius: 20px; /* الزوايا المستديرة */
+        overflow: hidden;
+        animation: slideInFromTop 0.8s ease-out;
+    }
+
+    .modal-header {
+        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .modal-footer {
+        border-top: 2px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control {
+        border-radius: 10px; /* الحقول بشكل دائري */
+    }
+
+    .btn {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes slideInFromTop {
+        from {
+            transform: translateY(-50%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .form-floating .form-control {
+        height: 60px;
+    }
+
+
+.search-container {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+}
+
+.search-card {
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.search-header {
+    background: #28a745;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+.search-title {
+    font-size: 18px;
+    margin: 0;
+}
+
+.search-body {
+    padding: 20px;
+}
+
+.search-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.search-field,
+.search-field-half {
+    width: 100%;
+}
+
+.search-field-half {
+    display: inline-block;
+    width: 48%;
+}
+
+.search-floating {
+    position: relative;
+}
+
+.search-floating input,
+.search-floating select {
+    width: 316px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    direction: rtl;
+}
+
+.search-floating label {
+    position: absolute;
+    top: -12px;
+ 
+    direction: rtl;
+    display: flex;
+    padding: 0 5px;
+    font-size: 12px;
+    color: #000000;
+}
+
+.search-btn {
+    width: 100%;
+    background: #28a745;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.search-btn:hover {
+    background: #218838;
+}
+.job-item {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid rgba(0, 128, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 128, 0, 0.1);
+}
+
+.job-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 128, 0, 0.2);
+}
+
+.company-logo img {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border: 2px solid #28a745;
+    padding: 3px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.company-logo img:hover {
+    transform: scale(1.1);
+}
+
+.apply-btn {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+    border: none;
+    border-radius: 25px;
+    transition: all 0.3s ease-in-out;
+    font-size: 14px;
+}
+
+.apply-btn:hover {
+    background: linear-gradient(135deg, #1e7e34, #155d26);
+    transform: scale(1.05);
+}
+
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.job-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
+    display: block;
+}
+
+.text-dark {
+    color: #222;
+    font-size: 18px;
+}
+
+.text-muted {
+    color: #666;
+    font-size: 14px;
+}
+
+.text-success {
+    color: #28a745 !important;
+}
+.pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 0;
+    }
+    
+    .page-item {
+        list-style: none;
+    }
+    
+    .page-link {
+        display: inline-block;
+        padding: 10px 18px;
+        color: #fff;
+        background-color: #009b23;
+        border: 1px solid #009b23;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .page-link:hover {
+        background-color: #009b23;
+        color: white;
+        transform: translateY(-5px) scale(1.05);
+    }
+    
+    .page-link:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px #009b23;
+    }
+    
+    .page-item.disabled .page-link {
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border-color: #ddd;
+        pointer-events: none;
+    }
+
+
+    </style>
+<!-- Carousel Start -->
+      <!-- Header End -->
+      <div class="container-xxl py-5 bg-dark page-header mb-5">
+        <div class="container my-5 pt-5 pb-4">
+            <h1 class="display-3 text-white mb-3 animated slideInDown"> قائمة الوظائف </h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb text-uppercase">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">الصفحة الرئيسية</a></li>
+             
+                    <li class="breadcrumb-item text-white active" aria-current="page"> قائمة الوظائف </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    <!-- Header End -->
+  <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+    
+        <!-- Jobs Start -->
+       <!-- Jobs Start -->
+
+
+
+       <div class="container-xxl py-5" style="direction:rtl">
+        <div class="container">
+            <h1 class="text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">قائمة الوظائف</h1>
+            <div class="row">
+                <!-- فلتر البحث -->
+                <div class="col-lg-4">
+                <div class="search-container mb-4">
+                    <div class="search-card">
+                        <div class="search-header">
+                            <h5 class="search-title text-white">🔍 بحث متقدم</h5>
+                        </div>
+                        <div class="search-body">
+                            <form method="GET" id="advanced-filter-form">
+                                <div class="search-grid">
+                                    <!-- عنوان الوظيفة -->
+                                    <div class="search-field" >
+                                        <div class="search-floating">
+                                            {{ myfilter.form.title }}
+                                            <label>🔎 عنوان الوظيفة</label>
+                                        </div>
+                                    </div>
+                
+                                    <!-- نوع الوظيفة والمستوى التعليمي -->
+                                    <div class="search-field-half">
+                                        <div class="search-floating">
+                                            {{ myfilter.form.career_type }}
+                                            <label>📌 نوع الوظيفة</label>
+                                        </div>
+                                    </div>
+                                    <div class="search-field-half">
+                                        <div class="search-floating">
+                                            {{ myfilter.form.education }}
+                                            <label>🎓 المستوى التعليمي</label>
+                                        </div>
+                                    </div>
+                
+                                    <!-- المستوى الوظيفي والجنس -->
+                                    <div class="search-field-half">
+                                        <div class="search-floating">
+                                            {{ myfilter.form.career_level }}
+                                            <label>📊 المستوى الوظيفي</label>
+                                        </div>
+                                    </div>
+                                    <div class="search-field-half">
+                                        <div class="search-floating">
+                                            {{ myfilter.form.gender }}
+                                            <label>👤 الجنس</label>
+                                        </div>
+                                    </div>
+                
+                                    <!-- الخبرة من وإلى -->
+                                    <div class="search-field-half">
+                                        <div class="search-floating">
+                                            {{ myfilter.form.years_of_experience_from }}
+                                            <label>⏳ الخبرة من</label>
+                                        </div>
+                                    </div>
+                                    <div class="search-field-half">
+                                        <div class="search-floating">
+                                            {{ myfilter.form.years_of_experience_to }}
+                                            <label>⏳ الخبرة إلى</label>
+                                        </div>
+                                    </div>
+                
+                                    <!-- الموقع -->
+                                    <div class="search-field">
+                                        <div class="search-floating">
+                                            {{ myfilter.form.location }}
+                                            <label>📍 الموقع</label>
+                                        </div>
+                                    </div>
+                
+                                    <!-- زر البحث -->
+                                    <div class="search-field">
+                                        <button type="submit" class="search-btn">🔍 بحث</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+    
+                <div class="col-lg-8">
+                    <div class="tab-content">
+                        {% for job in job_list %}
+                        {% if job.publication_date <= now %}
+                        <div class="job-item p-4 mb-4 shadow rounded">
+                            <div class="row g-4">
+                                <!-- الجانب الأيسر (صورة الشركة ونص الوظيفة) -->
+                                <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                                    <div class="company-logo me-3">
+                                        {% if job.employer.logo %}
+                                        <img class="img-fluid border rounded-circle" src="{{ job.employer.logo.url }}" alt="{{ job.title }}">
+                                        {% else %}
+                                        <img class="img-fluid border rounded-circle" src="{% static 'img/download.png' %}" alt="{{ job.title }}">
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-start">
+                                        <h5 class="mb-2 text-dark fw-bold job-title" title="{{ job.title }}">{{ job.title }}</h5>
+                                        <div class="d-flex text-muted small">
+                                            <span class="text-truncate" title="{{ job.location }}">
+                                                <i class="fa fa-map-marker-alt text-success me-2"></i>{{ job.location }}
+                                            </span>
+                                            <span class="text-truncate" title="{{ job.get_career_type_display }}">
+                                                <i class="far fa-clock text-success me-2"></i>{{ job.get_career_type_display }}
+                                            </span>
+                                            <span class="text-truncate" title="{{ job.salary }}">
+                                                <i class="far fa-money-bill-alt text-success me-2"></i>{{ job.salary }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <!-- الجانب الأيمن (الزر والتاريخ) -->
+                                <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end justify-content-center">
+                                    <a class="btn btn-success btn-sm px-4 py-2 fw-bold apply-btn" href="{% url 'job-details' job.slug %}">تقدم الآن</a>
+                                    <small class="text-truncate">
+                                        <i class="far fa-calendar-alt text-success me-2"></i>الموعد النهائي: {{ job.closing_date|date:"d M Y" }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+          
+                
+                
+                {%  if job_list.has_other_pages  %}
+                <nav aria-label="Page navigation example">
+
+                    <ul class="pagination justify-content-center">
+                        {% if job_list.has_previous  %}
+                      <li class="page-item disabled">
+                        <a class="page-link" href="?page={{job_list.previous_page_number}}" tabindex="-1">Previous</a>
+                      </li>
+                      {%  endif %}
+
+                      {%  for i  in job_list.paginator.page_range %}
+                        <li class="page-item"><a class="page-link" href="?page={{i}}">{{i}}</a></li>
+                      {%  endfor %}
+       
+                      {%  if job_list.has_next  %}
+
+                        <li class="page-item"><a class="page-link" href="?page={{job_list.next_page_number}}">Next</a></li>
+                      {%  endif %}
+                    </ul>
+                  </nav>
+
+                  
+                  {%  endif  %}
+         
+                  
+                
+            </div>
+            </div>
+            </div>
+
+    
+    
+<!-- Jobs End -->
+
+        <!-- Jobs End -->
+
+
+
+
+
+
+
+    <!-- Footer Start -->
+    {% include "layouts/footer.html" %}
+        
+{% endblock  %}

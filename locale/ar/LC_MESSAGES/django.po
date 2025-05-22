@@ -1,0 +1,41 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025 YOUR NAME OR COMPANY
+# This file is distributed under the same license as the PACKAGE package.
+# YOUR NAME <your.email@example.com>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ManageJob 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-22 23:07+0300\n"
+"PO-Revision-Date: 2025-05-22 23:30+0300\n"
+"Last-Translator: Your Name <your.email@example.com>\n"
+"Language-Team: Arabic <ar@li.org>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: Account/validators.py:20
+#, python-format
+msgid "كلمة المرور يجب أن تكون بطول %(min_length)d أحرف على الأقل."
+msgstr ""
+
+#: Account/validators.py:26
+msgid "كلمة المرور يجب أن تحتوي على حروف كبيرة وصغيرة، وأرقام."
+msgstr ""
+
+#: Account/validators.py:31
+msgid ""
+"كلمة المرور يجب أن تحتوي على حروف كبيرة وصغيرة، وأرقام، ويجب أن تكون بطول 8 "
+"أحرف على الأقل."
+msgstr ""
+
+msgid "Please correct the errors below."
+msgstr "يرجى تصحيح الأخطاء أدناه."
+
+msgid "After you’ve created a user, you’ll be able to edit more user options."
+msgstr "بعد إنشاء المستخدم، ستتمكن من تعديل المزيد من الخيارات."

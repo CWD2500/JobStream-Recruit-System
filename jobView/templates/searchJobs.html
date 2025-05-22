@@ -1,0 +1,96 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+    <!-- Spinner Start -->
+    {% comment %} <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div> {% endcomment %}
+    <!-- Spinner End -->
+
+
+    <!-- Navbar Start -->
+    {% load static %}
+  <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+   
+
+<!-- Navbar Start -->
+{% include "layouts/navbar.html" %}
+<!-- Navbar End -->
+
+
+<div class="tab-content">
+    <div class="container">
+        <div id="tab-2" class="tab-pane fade show p-0 active">
+            <div id="jobs-container">
+                {% if query %}
+                    <h3 class="text-center">نتائج البحث عن "{{ query }}"</h3>
+                {% else %}
+                    <h3 class="text-center" >جميع الوظائف</h3>
+                {% endif %}
+
+                {% for job in jobs %}
+                <div class="job-item p-4 mb-4 shadow-sm rounded">
+                    <div class="row g-4 align-items-center">
+                        <div class="col-sm-12 col-md-8 d-flex align-items-center">
+                            <div class="company-logo me-3">
+                                {% if job.employer.logo %}
+                                <img class="img-fluid  border" src="{{ job.employer.logo.url }}" alt="{{ job.title }}"  width="50px" height="50px">
+                                {% else %}
+                                <img class="img-fluid  border" src="{% static 'img/company.png' %}" alt="{{ job.title }}"  width="50px"  height= "50px">
+                                {% endif %}
+                            </div>
+                            <div class="text-start">
+                                <h5 class="mb-2 text-dark fw-bold job-title" title="{{ job.title }}">{{ job.title }}</h5>
+                                <div class="d-flex text-muted small">
+                                    <span class="me-3"><i class="fa fa-map-marker-alt text-success me-1"></i>{{ job.location }}</span>
+                                    <span class="me-3"><i class="far fa-clock text-success me-1"></i>{{ job.get_career_type_display }}</span>
+                                    <span><i class="far fa-money-bill-alt text-success me-1"></i>{{ job.salary }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4 d-flex flex-column align-items-start align-items-md-end">
+                            <a class="btn btn-success btn-sm px-4 py-2 fw-bold apply-btn" href="{% url 'job-details' job.slug %}">تقدم الآن</a>
+                            <small class="text-muted"><i class="far fa-calendar-alt text-success me-1"></i>الموعد النهائي: {{ job.closing_date|date:"d M Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                    <p class="text-center">لا توجد وظائف تطابق بحثك.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Footer Start -->
+{% include "layouts/footer.html" %}
+
+
+{%  endblock %}
+
+

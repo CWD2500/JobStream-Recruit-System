@@ -1,0 +1,273 @@
+{% load static %}
+
+<style>
+    .nav-item .nav-link {
+        font-weight: bolder;
+        color: #000000;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+        color: #0c9400;
+    }
+
+    .navbar-nav {
+        text-align: end; 
+    }
+
+    .profile-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid #28a745;
+        transition: transform 0.3s ease;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.3); 
+    }
+
+    .btn-outline-primary {
+        border-radius: 50px;
+        padding: 10px 15px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .modal-content {
+        border-radius: 15px;
+    }
+
+    .input-group .form-control {
+        border-radius: 30px 0 0 30px;
+    }
+
+    .input-group .btn {
+        border-radius: 0 30px 30px 0;
+        background-color: #0c9400;
+        color: white;
+    }
+
+    .notification-body {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .notification-title {
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .notification-details .notification-line {
+        margin-left: 15px;
+        margin-bottom: 5px;
+    }
+
+    .notification-time {
+        font-size: 12px;
+        color: #6c757d;
+        margin-top: 8px;
+        margin-left: 15px;
+    }
+
+    .dropdown-item {
+        padding: 12px 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
+
+    .dropdown-item:hover {
+        background-color: #e9ecef;
+    }
+
+
+ 
+    .shining-text {
+        color: darkgreen; 
+        font-size: 2.8rem;
+        font-weight: bold;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+  
+    .shining-text::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -150%;
+        width: 150%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+        animation: shineEffect 2s infinite linear;
+    }
+
+    .shining-text {
+        animation: glowEffect 1.5s infinite alternate;
+    }
+
+
+    @keyframes shineEffect {
+        0% { left: -150%; }
+        100% { left: 150%; }
+    }
+
+
+    @keyframes glowEffect {
+        0% { text-shadow: 0 0 5px rgba(255, 255, 255, 0.4); }
+        100% { text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); }
+    }
+</style>
+
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0" style="direction: rtl; height: 75px;">
+    <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center text-center py-0 px-4 px-lg-5">
+        <h1 class="shining-text">وظائف المستقبل</h1>
+    </a>
+    <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto p-4 p-lg-0 text-right">
+            <a href="{% url 'home' %}" class="nav-item nav-link active">
+                <i class="fa fa-home me-2"></i> الرئيسية
+            </a>
+            <a href="{% url 'about' %}" class="nav-item nav-link">
+                <i class="fa fa-info-circle me-2"></i> من نحن
+            </a>
+            <!-- <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="fa fa-briefcase me-2"></i> الوظائف
+                </a>
+                <div class="dropdown-menu rounded-0 m-0">
+                    <a href="" class="dropdown-item">
+                        <i class="fa fa-list me-2"></i> قائمة الوظائف
+                    </a>
+                </div>
+            </div>
+            <a href="" class="nav-item nav-link">
+                <i class="fa fa-phone me-2"></i> اتصل بنا
+            </a> -->
+        </div>
+
+ 
+       <!--  Searching  -->
+        <button class="me-3" data-bs-toggle="modal" data-bs-target="#searchModal" style="background: none; border: none; color: #0c9400;">
+            <i class="fa fa-search"></i>
+        </button>
+
+
+        {% if request.user.is_authenticated %}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          
+        <div class="dropdown me-3">
+            <a class="nav-link position-relative" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="top: 7px; font-size: 20px;" onclick="markNotificationsAsRead('{{ notifications_url }}')">
+                <i class="fa fa-bell"></i>
+                {% if notifications %}
+                    <span class="bg-danger position-absolute" id="notification-count" style="top: 17px;left: -19px;border-radius: 50%; width: 23px;height: 23px;text-align: center;color: white;font-size: 15px;">
+                        {{ notifications.count }}
+                    </span>
+                {% endif %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end text-end" aria-labelledby="notificationsDropdown" style="overflow-x: scroll;height: 230px;">
+                {% if notifications %}
+                    {% for notification in notifications %}
+                    <li class="dropdown-item py-3">
+                        <div class="notification-body" id="notification-{{ notification.id }}">
+                            {% for line in notification.message_lines %}
+                                <p class="notification-line">{{ line }}</p>
+                            {% endfor %}
+                            <small class="text-muted notification-time">{{ notification.created_at|date:"Y-m-d H:i" }}</small>
+                        </div>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="dropdown-item text-center">لا توجد إشعارات جديدة.</li>
+                {% endif %}
+            </ul>
+        </div>
+
+         
+            <li class="nav-item dropdown">
+                <a class="nav-link d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{% static 'img/a1.jpeg' %}" alt="no image" class="profile-image" />
+                </a>
+                <ul class="dropdown-menu text-end">
+                    {% if is_employer %}
+                    <li><a class="dropdown-item" href="{% url 'employer-addJob' request.user.userEmployer.slug %}" style="color: #000;">الملف الشخصي</a></li>
+                  
+                    {%  elif is_job_seeker %}
+                        <li><a class="dropdown-item" href="{% url 'profile-users' request.user.profile.slug %}" style="color: #000;">الملف الشخصي</a></li>
+                        <li><a class="dropdown-item" href="{% url 'orders' %}" style="color: #000;">حالة طلباتي</a></li>
+                    
+                        {% elif request.user.is_superuser or request.user.is_staff %}
+                        <li><a class="dropdown-item" href="/admin/" style="color: #000;">لوحة الإدارة</a></li>
+                        {% endif %}
+                    
+                    <li><hr class="dropdown-divider"></li>
+                 
+                    <form action="{% url 'logout' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="dropdown-item" style="color: #000;">تسجيل الخروج</button>
+                    </form>
+                </ul>
+            </li>
+        </ul>
+    {% else %}
+        <a href="{% url 'register' %}" class="btn btn-primary rounded-0 py-4 px-lg-5 d-none d-lg-block">
+            إنشاء حساب <i class="fa fa-arrow-left ms-3"></i>
+        </a>
+    {% endif %}
+    
+    </div>
+</nav>
+
+<!-- Navbar End -->
+
+
+  
+        <script>
+            function markNotificationsAsRead(notificationsUrl) {
+                var notificationCountElement = document.getElementById("notification-count");
+                if (notificationCountElement) {
+                    notificationCountElement.style.display = 'none'; 
+                }
+
+                fetch(notificationsUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('تم تحديث جميع الإشعارات كمقروءة');
+                    }
+                })
+                .catch(error => console.error('خطأ:', error));
+            }
+
+            function updateNotificationCount(count) {
+                var notificationCountElement = document.getElementById("notification-count");
+                if (notificationCountElement && count > 0) {
+                    notificationCountElement.textContent = count;  
+                    notificationCountElement.style.display = 'block'; 
+                }
+            }
+
+            window.onload = function() {
+                var newNotificationsCount = {{ notifications.count }};
+                updateNotificationCount(newNotificationsCount);
+            };
+        </script>

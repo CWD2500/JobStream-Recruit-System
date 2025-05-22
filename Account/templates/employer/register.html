@@ -1,0 +1,312 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+<style>
+    /* إعدادات الصفحة والخلفية */
+    body {
+        background: #f8f9fa;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        background: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid #ddd;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+        width: 55%;
+        margin: 20px auto;
+
+    }
+
+    .welcome-section {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .welcome-section h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #28a745;
+    }
+
+    .welcome-section p {
+        font-size: 1.2rem;
+        color: #555;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    .form-floating {
+        margin-bottom: 15px;
+        position: relative;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #28a745;
+        height: 40px;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(40, 167, 69, 0.1);
+    }
+
+    .form-control:focus {
+        border-color: #218838;
+        box-shadow: 0 0 8px rgba(33, 136, 56, 0.4);
+        outline: none;
+    }
+
+    .form-control:hover {
+        border-color: #218838;
+        box-shadow: 0 4px 10px rgba(33, 136, 56, 0.2);
+    }
+
+    label {
+        font-size:16px;
+        text-indent: 10px;
+        color: #555;
+    }
+
+    .validation-error {
+        color: red;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: none; /* مخفي افتراضيًا */
+    }
+
+    .btn-primary {
+        background-color: #28a745;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #218838;
+        box-shadow: 0 5px 15px rgba(33, 136, 56, 0.3);
+    }
+
+    .text-danger {
+        color: red;
+    }
+</style>
+<div class="container" style="direction: rtl;">
+    <div class="row">
+        <div class="welcome-section">
+            <h1>إنشاء حساب لصاحب العمل</h1>
+            <p>ابدأ الآن وكن جزءًا من منصة التوظيف المميزة!</p>
+        </div> 
+        <form id="validationForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row row-cols-2">
+                <!-- اسم المسؤول -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="name_of_responsible_person" name="name_of_responsible_person" class="form-control" value="{{ form.name_of_responsible_person.value|default:'' }}" placeholder="اسم المسؤول *" required>
+                    <label for="name_of_responsible_person">اسم المسؤول *</label>
+                    <div class="text-danger" id="nameError"></div>
+                </div>
+
+                <!-- البريد الإلكتروني -->
+                <div class="form-floating mb-3">
+                    <input type="email" id="email" name="email" class="form-control" value="{{ form.email.value|default:'' }}" placeholder="البريد الإلكتروني *" required>
+                    <label for="email">البريد الإلكتروني *</label>
+                    <div class="text-danger">
+                        {% for error in form.email.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- اسم الشركة -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="company_name" name="company_name" class="form-control" value="{{ form.company_name.value|default:'' }}" placeholder="اسم الشركة *" required>
+                    <label for="company_name">اسم الشركة *</label>
+                    <div class="text-danger" id="companyError"></div>
+                </div>
+
+                <!-- رقم الهاتف -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="phone_number" name="phone_number" class="form-control" value="{{ form.phone_number.value|default:'' }}" placeholder="رقم الهاتف *" required>
+                    <label for="phone_number">رقم الهاتف *</label>
+                    <div class="text-danger" id="phoneError"></div>
+                </div>
+
+                <!-- المدينة -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="state" name="state" class="form-control" value="{{ form.state.value|default:'' }}" placeholder="المدينة *" required>
+                    <label for="state">المدينة *</label>
+                    <div class="text-danger" id="stateError"></div>
+                </div>
+
+                <!-- المحافظة -->
+                <div class="form-floating mb-3">
+                    <input type="text" id="governorate" name="governorate" class="form-control" value="{{ form.governorate.value|default:'' }}" placeholder="المحافظة *" required>
+                    <label for="governorate">المحافظة *</label>
+                    <div class="text-danger" id="governorateError"></div>
+                </div>
+
+            
+          <!-- كلمة المرور -->
+                <div class="form-floating mb-3">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="كلمة المرور *" required>
+                    <label for="password">كلمة المرور *</label>
+                    <div class="text-danger" id="passwordError"></div>
+                </div>
+
+                <!-- تأكيد كلمة المرور -->
+                <div class="form-floating mb-3">
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="تأكيد كلمة المرور *" required>
+                    <label for="confirm_password">تأكيد كلمة المرور *</label>
+                    <div class="text-danger" id="confirmPasswordError"></div>
+                </div>
+
+
+                <!-- زر الإرسال -->
+                <button type="submit" class="btn btn-primary w-100" id="submitBtn">إنشاء الحساب</button>
+            </div>
+            <a href="{% url 'logins' %}" class="link-underline-success text-bold mt-3" style="text-decoration: underline;color: blue;">هل لديك حساب؟ تسجيل الدخول</a><br>
+            <a href="{%  url 'home' %}" class="link-underline-success text-bold" style="text-decoration: underline;color: rgb(0, 0, 0);">الصفحة الرئيسية</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    // التحقق من الحقول أثناء الكتابة
+    document.getElementById('name_of_responsible_person').addEventListener('input', function() {
+      validateTextField(this, 'nameError');
+    });
+
+    document.getElementById('company_name').addEventListener('input', function() {
+      validateTextField(this, 'companyError');
+    });
+
+    document.getElementById('state').addEventListener('input', function() {
+      validateTextField(this, 'stateError');
+    });
+
+    document.getElementById('governorate').addEventListener('input', function() {
+      validateTextField(this, 'governorateError');
+    });
+
+    // التحقق من رقم الهاتف
+    document.getElementById('phone_number').addEventListener('input', function() {
+      validatePhoneField(this, 'phoneError');
+    });
+
+    // التحقق من الحقول النصية (الاسم، الشركة، المدينة، المحافظة)
+    function validateTextField(inputElement, errorElementId) {
+      const value = inputElement.value;
+      const errorElement = document.getElementById(errorElementId);
+
+      // التحقق من وجود أرقام في الحقل
+      if (/\d/.test(value)) {
+        errorElement.textContent = "يرجى إدخال أحرف فقط!";
+        errorElement.style.color = "red";
+      } else {
+        errorElement.textContent = "";
+      }
+    }
+
+    // التحقق من رقم الهاتف
+    function validatePhoneField(inputElement, errorElementId) {
+      const value = inputElement.value;
+      const errorElement = document.getElementById(errorElementId);
+
+      // التحقق من أن الرقم يحتوي على أرقام فقط
+      if (/\D/.test(value)) {
+        errorElement.textContent = "يرجى إدخال أرقام فقط!";
+        errorElement.style.color = "red";
+      }
+      // التحقق من أن الرقم لا يتجاوز 16 رقم
+      else if (value.length > 16) {
+        errorElement.textContent = "الرجاء إدخال أقل من 16 رقم!";
+        errorElement.style.color = "red";
+      } else {
+        errorElement.textContent = "";
+      }
+    }
+
+    // التحقق من صحة النموذج عند الضغط على زر الإرسال
+    document.getElementById('validationForm').addEventListener('submit', function(event) {
+        let isValid = true;
+
+        // التحقق من الحقول النصية
+        if (/\d/.test(document.getElementById('name_of_responsible_person').value)) {
+            document.getElementById('nameError').textContent = "يرجى إدخال أحرف فقط!";
+            isValid = false;
+        }
+        if (/\d/.test(document.getElementById('company_name').value)) {
+            document.getElementById('companyError').textContent = "يرجى إدخال أحرف فقط!";
+            isValid = false;
+        }
+        if (/\d/.test(document.getElementById('state').value)) {
+            document.getElementById('stateError').textContent = "يرجى إدخال أحرف فقط!";
+            isValid = false;
+        }
+        if (/\d/.test(document.getElementById('governorate').value)) {
+            document.getElementById('governorateError').textContent = "يرجى إدخال أحرف فقط!";
+            isValid = false;
+        }
+
+        // التحقق من رقم الهاتف
+        if (/\D/.test(document.getElementById('phone_number').value)) {
+            document.getElementById('phoneError').textContent = "يرجى إدخال أرقام فقط!";
+            isValid = false;
+        }
+        if (document.getElementById('phone_number').value.length > 16) {
+            document.getElementById('phoneError').textContent = "الرجاء إدخال أقل من 16 رقم!";
+            isValid = false;
+        }
+
+        // إذا كان هناك خطأ في أحد الحقول، إيقاف الإرسال
+        if (!isValid) {
+            event.preventDefault();  // إيقاف إرسال النموذج
+        }
+    });
+
+
+   
+        document.getElementById('password').addEventListener('input', validatePasswordMatch);
+        document.getElementById('confirm_password').addEventListener('input', validatePasswordMatch);
+    
+        function validatePasswordMatch() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+            const errorElement = document.getElementById('confirmPasswordError');
+            const submitBtn = document.getElementById('submitBtn');
+    
+            if (confirmPassword.length > 0 && password !== confirmPassword) {
+                errorElement.textContent = "كلمة المرور غير متطابقة!";
+                errorElement.style.color = "red";
+                submitBtn.disabled = true;
+            } else {
+                errorElement.textContent = "";
+                submitBtn.disabled = false;
+            }
+        }
+    
+        // منع الإرسال إذا لم تتطابق كلمات المرور
+        document.getElementById('validationForm').addEventListener('submit', function(event) {
+            if (document.getElementById('password').value !== document.getElementById('confirm_password').value) {
+                document.getElementById('confirmPasswordError').textContent = "كلمة المرور غير متطابقة!";
+                event.preventDefault();
+            }
+        });
+    </script>
+
+
+
+{% endblock %}

@@ -1,0 +1,417 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+
+    {% include "layouts/navbar.html" %}
+
+
+
+    <style>
+        /* تخصيص تنسيق النموذج */
+    .custom-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 90rem;
+        width: 100%;
+        margin-right: 20px;
+        
+    }
+    
+    /* تخصيص الحقول */
+    .form-floating {
+        margin-bottom: 15px;
+        position: relative;
+    }
+    
+    .form-floating label {
+        position: absolute;
+        top: -10px;
+        right: 15px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: #000000;
+        /* background-color: #fff; */
+        padding: 0 5px;
+    }
+    
+    input, select, textarea {
+        border-radius: 5px;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        width: 100%;
+        font-size: 1rem;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+    
+    .btn {
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+    }
+    
+    .btn-primary:hover, .btn-secondary:hover {
+        opacity: 0.9;
+    }
+    
+    .error-msg {
+        color: red;
+        font-size: 14px;
+        margin-top: -10px;
+    }
+    
+    .table th {
+        background-color: #222; 
+        color: #fff; 
+        font-weight: bold;
+        text-align: center;
+        padding: 12px;
+        border-bottom: 3px solid #444; 
+    }
+    
+    .table-striped tbody tr:nth-child(odd) {
+        background-color: #f2f2f2; 
+    }
+    
+    .table-striped tbody tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+    
+    .table-bordered td, .table-bordered th {
+        border: 2px solid #444; 
+    }
+    
+    .table tbody tr:hover {
+        background-color: #ddd; 
+        transition: 0.3s;
+    }
+    
+    .table td {
+        color: #222; 
+        font-size: 16px;
+        text-align: center;
+        padding: 10px;
+    }
+    
+    
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+    
+        .form-group .form-floating {
+            flex: 1 0 48%;  
+            margin-right: 2%; 
+        }
+    
+        .form-group .form-floating:last-child {
+            margin-right: 0;
+        }
+    
+        @media (max-width: 767px) {
+            .form-group .form-floating {
+                flex: 1 0 100%;  
+                margin-right: 0; 
+            }
+        }
+    
+    
+    </style>
+    
+     <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+    
+
+    <div class="container-fluid mt-4" style="direction: rtl;">
+        <div class="row" style="width: 80rem;">
+            <div class="justify-content-center" id="editJobFormContainer" style="border-radius: 10px;">
+                <div class="card custom-card">
+                    <div class="card-header text-white bg-warning text-center" style="border-radius: 10px;">
+                        <b>تعديل بيانات الوظيفة</b>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="row">
+                                <!-- نموذج المعلومات الأساسية -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.job_category }}
+                                            <label for="id_job_category">المسمى الوظيفي *</label>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.title }}
+                                            <label for="id_title">اسم الوظيفة *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.education }}
+                                            <label for="id_education">مستوى التعليم *</label>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.career_level }}
+                                            <label for="id_career_level">المستوى الوظيفي *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.years_of_experience_from }}
+                                            <label for="id_years_of_experience_from">سنوات الخبرة من *</label>
+                                        </div>
+                                        <div id="experience-error" class="error-msg">
+                                            <b>سنوات الخبرة (من) يجب أن تكون أصغر من سنوات الخبرة (إلى) ويجب أن تكون الأرقام موجبة.</b>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.years_of_experience_to }}
+                                            <label for="id_years_of_experience_to">سنوات الخبرة إلى *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.salary }}
+                                            <label for="id_salary">الراتب *</label>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.career_type }}
+                                            <label for="id_career_type">نوع الوظيفة *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.email }}
+                                            <label for="id_email">البريد الإلكتروني *</label>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.phone_number }}
+                                            <label for="id_phone_number">رقم الهاتف *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.publication_date }}
+                                            <label for="id_publication_date">تاريخ النشر *</label>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.closing_date }}
+                                            <label for="id_closing_date">تاريخ الإغلاق *</label>
+                                        </div>
+                                    </div>
+                                    <div class="error-msg">
+                                        <p id="date-error" style="color: red; display: none;">⚠️ يجب أن يكون تاريخ الإغلاق أكبر من تاريخ النشر!</p>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.location }}
+                                            <label for="id_location">الموقع *</label>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.gender }}
+                                            <label for="id_gender">النوع الاجتماعي *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <!-- حقل الوصف الوظيفي منفصل -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <div class="form-floating">
+                                            {{ form.job_description }}
+                                            <label for="id_job_description">الوصف الوظيفي *</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6  col-lg-6">
+                                    <div class="form-group text-center mt-3">
+                                        <button type="submit" class="btn btn-warning w-100"  id="submit-btn">تحديث</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6  col-lg-6">
+                                    <div class="form-group text-center mt-3">
+                                        <a href="{% url 'employer-addJob' job_editor.employer.slug %}" class="btn btn-secondary w-100">إلغاء</a>
+                                    </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+
+
+
+
+<script>
+   
+    document.addEventListener('DOMContentLoaded', function() {
+        const publicationDate = document.getElementById('id_publication_date');
+        const closingDate = document.getElementById('id_closing_date');
+        const dateError = document.getElementById('date-error');
+        const form = document.querySelector('form');
+        const submitButton = document.getElementById('submit-btn');
+        const yearsFrom = document.getElementById('id_years_of_experience_from');
+        const yearsTo = document.getElementById('id_years_of_experience_to');
+        const experienceError = document.getElementById('experience-error');
+
+        function parseDate(input) {
+            if (!input) return null;
+            const parts = input.split('-');
+            return new Date(parts[0], parts[1]-1, parts[2]);
+        }
+
+        function validateDates() {
+            const pubDate = parseDate(publicationDate.value);
+            const closeDate = parseDate(closingDate.value);
+
+            if (pubDate && closeDate) {
+                if (closeDate <= pubDate) {
+                    dateError.style.display = 'block';
+                    return false;
+                } else {
+                    dateError.style.display = 'none';
+                    return true;
+                }
+            }
+            return false; 
+        }
+
+        function validateExperience() {
+            const fromValue = parseInt(yearsFrom.value) || 0;
+            const toValue = parseInt(yearsTo.value) || 0;
+
+            if (fromValue < 0 || toValue < 0 || fromValue >= toValue) {
+                experienceError.style.display = 'block';
+                return false;
+            } else {
+                experienceError.style.display = 'none';
+                return true;
+            }
+        }
+
+        function validateForm() {
+            const isDatesValid = validateDates();
+            const isExperienceValid = validateExperience();
+            
+            submitButton.disabled = !(isDatesValid && isExperienceValid);
+        }
+
+        publicationDate.addEventListener('change', validateForm);
+        closingDate.addEventListener('change', validateForm);
+        yearsFrom.addEventListener('input', validateForm);
+        yearsTo.addEventListener('input', validateForm);
+
+        validateForm();
+    });
+
+</script>
+
+{% endblock %}

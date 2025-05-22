@@ -1,0 +1,504 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+
+
+
+
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .form-step {
+        display: none;
+    }
+
+    .form-step-active {
+        display: block;
+    }
+
+    .progress {
+        height: 10px;
+        margin-bottom: 20px;
+    }
+
+    .progress-step {
+        width: 33%;
+        text-align: center;
+    }
+
+    .progress-step-active {
+        font-weight: bold;
+        color: #00ffaa;
+    }
+
+    #drop-area {
+        border: 2px dashed #00ffaa;
+        padding: 20px;
+        text-align: center;
+        border-radius: 10px;
+        background-color: #e9f5ff;
+        cursor: pointer;
+    }
+cx
+    #drop-area:hover {
+        background-color: #d7eafc;
+    }
+
+    .form-section-data-user {
+        /* flex: 1; */
+        /* border: 1px solid #00b97c; */
+        margin-top: 60px;
+        margin: auto;
+        justify-content: center;
+        align-items: center;
+        width: 600px;
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-section-data-user:hover {
+        transition: .5s;
+        /* border: 1px solid #00ffaa; */
+        box-shadow: 0px 0px 10px #00ffaa;
+    }
+
+
+
+    /* Floating Label */
+    .form-floating-label {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .form-floating-label input {
+        width: 100%;
+        padding: 10px;
+        padding-top: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+        direction: rtl;
+    }
+
+    .form-floating-label label {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        color: #aaa;
+        transition: 0.3s;
+        pointer-events: none;
+    }
+
+
+
+
+    .form-floating-label input:focus+label,
+    .form-floating-label input:not(:placeholder-shown)+label {
+        top: -15px;
+        right: 10px;
+        /* background-color: #fff; */
+        /* color: var(--primary-color); */
+        /* padding: 0 5px; */
+        font-size: 1rem;
+        color: #00B074;
+        font-weight: bold;
+    }
+
+
+    /* Drop Area */
+    .drop-area {
+        border: 2px dashed #00B074;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        margin-bottom: 20px;
+        transition: background-color 0.3s;
+        cursor: pointer;
+    }
+
+    .drop-area:hover {
+        background-color: #f0f8ff;
+    }
+
+    .drop-area i {
+        font-size: 40px;
+        color: #00B074;
+    }
+
+    .drop-area p {
+        margin-top: 10px;
+        color: #aaa;
+    }
+
+
+    .progressbards {
+        width: 100%;
+        background-color: #e9ecef;
+        border-radius: 5px;
+        overflow: hidden;
+        height: 20px;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        background-color: #28a745;
+        text-align: center;
+        line-height: 20px;
+        color: white;
+        font-weight: bold;
+        transition: width 0.4s ease;
+    }
+
+
+    .drop-area {
+        border: 2px dashed #ccc;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.3s;
+        border-radius: 10px;
+    }
+    
+    .drop-area:hover {
+        border-color: #007bff;
+    }
+    
+    #preview-container img {
+        display: block;
+        margin: auto;
+    }
+
+</style>
+
+ <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+
+<div class="containerAccout">
+    <div class="sidebar">
+        <h2 class="m-0 animated slideInDown mt-5"> أبني سيرتك الذاتية </h2>
+        <ul class="list-unstyled">
+
+            <li class="animated slideInRight"> ابني سيرتك الذاتية لنزيد من فرص عملك</li>
+            <li class="animated slideInLeft"> أحرص ان يحتوي هلى كامل خبرتك المهنية </li>
+
+        </ul>
+    </div>
+
+    <div class="form-section-data-user ">
+        <b style="float: left;"> <a href="{% url "home" %}"> تخطي </a> </b>
+        <h4 class="text-center p-3" style="color: #00ffaa;">المعلومات الرئيسية</h4>
+
+
+        <div class="container">
+            <div class="">
+                <div class="">
+                    <!-- <h2 class="text-center mb-4">Multi-Step Form</h2> -->
+
+                    <!-- Progress Bar -->
+                    <div class="progress">
+                        <div class="progress-bar" id="progress"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="progress-step progress-step-active">الخطوة 1</span>
+                        <span class="progress-step">الخطوة 2</span>
+                        <span class="progress-step">الخطوة 3</span>
+                    </div>
+
+                    <!-- Multi-Step Form -->
+                    <form id="multiStepForm" class="form" method="POST" enctype="multipart/form-data">
+                           {% csrf_token %}
+                        <!-- Step 1 -->
+                        <div class="form-step form-step-active">
+                            <!-- <div class="mb-3">
+                      <label for="databrith" class="form-label">Date of Birth</label>
+                      <input type="date" class="form-control" id="databrith">
+                    </div> -->
+                            <div class="form-floating-label">
+                                <input type="date" name="data_of_brith" id="databrith" name="date_of_birth"
+                                    placeholder=" " style="direction: rtl;">
+                                <label for="databrith">تاريخ الميلاد</label>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender1"
+                                            value="male" checked>
+                                        <label class="form-check-label p-1" for="gender1">ذكر</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="gender" id="gender2"
+                                            value="female">
+                                        <label class="form-check-label p-1" for="gender2">أنثى</label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-floating-label">
+                                        <!-- <label for="nationality">الجنسية</label> -->
+                                        <select class="form-control" id="nationality" name="nationality"
+                                            style="background: white;color:black;padding: 10px;">
+                                            <option value="" disabled selected>اختر الجنسية</option>
+                                            {% for code, name in nationalities %}
+                                            <option value="{{ code }}">{{ name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-floating-label">
+                                        <input type="text" name="state" id="residence" placeholder=" "
+                                            style="direction: rtl;">
+                                        <label for="residence"> الدولة</label>
+                                    </div>
+                                </div>
+                                    {% comment %} <div class="mb-3">
+                                        <div class="form-floating-label">
+                                            <input type="text" class="form-control"  name="city"  id="city" placeholder=" ">
+                                            <label for="city">المدينة</label>
+                                        </div>
+                                    </div> {% endcomment %}
+
+                            </div>
+                            <button type="button" class="btn btn-outline-primary    btn-next  w-100 ">التالي </button>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="form-step">
+                            <div class="form-floating-label">
+                                <!-- <label for="language">اللغة التي كتبت بها السيرة الذاتية</label> -->
+                          
+                            </div>
+
+                            
+                            <div class="drop-area" id="drop-area-file" onclick="document.getElementById('fileElemCV').click();">
+                                <i class="fas fa-file-upload"></i>
+                                <p>رفع الملف الشخصي CV (PDF فقط)</p>
+                                <input type="file" id="fileElemCV" style="display:none;" name="the_biography" accept=".pdf" onchange="handleFileUpload(event)" />
+                            </div>
+                            <p id="file-name" style="margin-top: 10px; color: green;"></p>
+                            <p id="file-error" style="margin-top: 10px; color: red;"></p>
+                            
+                            <div class="progressbards" style="margin-top: 15px; display: none;" id="progress-container">
+                                <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+                            </div>
+
+
+                            <div class="btns-group">
+                                <div class="row mt-5">
+                                    <div class="col">
+                                        <button type="button" class="btn btn-outline-primary btn-next  w-100 ">التالي
+                                        </button>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button"
+                                            class="btn btn-outline-secondary btn-prev    w-100 ">السابق </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="form-step">
+                            <div class="drop-area" id="drop-area-image" onclick="document.getElementById('imageElem').click();">
+                                <i class="fas fa-user-circle"></i>
+                                <p>رفع صورة شخصية</p>
+                                <input type="file" id="imageElem" style="display:none;" accept="image/*" name="picture" onchange="handleImageUpload(event)" />
+                            </div>
+                            <p id="image-error" style="margin-top: 10px; color: red;"></p>
+                            <div id="preview-container" style="margin-top: 15px; display: none;">
+                                <img id="preview-image" style="max-width: 200px; max-height: 200px; border-radius: 50%; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);" alt="معاينة الصورة" />
+                            </div>
+
+                            <div class="btns-group">
+                                <div class="row mt-5">
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-outline-success   w-100 ">أرسال</button>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button"
+                                            class="btn btn-outline-secondary btn-prev w-100">السابق</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+<script>
+    // JavaScript Code
+    const prevBtns = document.querySelectorAll(".btn-prev");
+    const nextBtns = document.querySelectorAll(".btn-next");
+    const progress = document.getElementById("progress");
+    const formSteps = document.querySelectorAll(".form-step");
+    const progressSteps = document.querySelectorAll(".progress-step");
+
+    let formStepsNum = 0;
+
+    nextBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            formStepsNum++;
+            updateFormSteps();
+            updateProgressbar();
+        });
+    });
+
+    prevBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            formStepsNum--;
+            updateFormSteps();
+            updateProgressbar();
+        });
+    });
+
+    function updateFormSteps() {
+        formSteps.forEach((formStep) => {
+            formStep.classList.remove("form-step-active");
+        });
+        formSteps[formStepsNum].classList.add("form-step-active");
+    }
+
+    function updateProgressbar() {
+        progressSteps.forEach((progressStep, idx) => {
+            if (idx <= formStepsNum) {
+                progressStep.classList.add("progress-step-active");
+            } else {
+                progressStep.classList.remove("progress-step-active");
+            }
+        });
+
+        const progressActive = document.querySelectorAll(".progress-step-active");
+        progress.style.width =
+            ((progressActive.length - 1) / (progressSteps.length - 1)) * 100 + "%";
+    }
+/*
+    // التعامل مع الصور
+    const dropAreaImage = document.getElementById('drop-area-image');
+    dropAreaImage.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropAreaImage.style.backgroundColor = '#e9f5ff';
+    });
+
+    dropAreaImage.addEventListener('dragleave', () => {
+        dropAreaImage.style.backgroundColor = '';
+    });
+
+    dropAreaImage.addEventListener('drop', (event) => {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        if (files.length) {
+            handleFile(files[0]);
+        }
+    });
+
+    dropAreaImage.addEventListener('click', () => {
+        document.getElementById('imageElem').click();
+    });
+
+    function handleFile(event) {
+        const file = event.target.files[0];
+        localStorage.setItem('image', file.name);
+    }
+
+
+*/
+    /* File CV   */
+
+  
+    function handleFileUpload(event) {
+        const file = event.target.files[0]; 
+        const fileNameElem = document.getElementById("file-name");
+        const fileErrorElem = document.getElementById("file-error");
+        const progressContainer = document.getElementById("progress-container");
+        const progressBar = document.getElementById("progress-bar");
+    
+        if (file) {
+            if (file.type === "application/pdf") {
+                fileNameElem.textContent = `تم رفع الملف: ${file.name}`;
+                fileErrorElem.textContent = ""; 
+    
+                progressContainer.style.display = "block";
+                progressBar.style.width = "0%";
+    
+                let progress = 0;
+                const interval = setInterval(() => {
+                    if (progress >= 100) {
+                        clearInterval(interval); 
+                        fileNameElem.textContent += " (تم الرفع بنجاح!)";
+                    } else {
+                        progress += 10;
+                        progressBar.style.width = `${progress}%`;
+                        progressBar.textContent = `${progress}%`;
+                    }
+                }, 100); 
+            } else {
+                fileNameElem.textContent = ""; 
+                fileErrorElem.textContent = "يجب رفع ملف بصيغة PDF فقط.";
+                event.target.value = ""; 
+            }
+        }
+    }
+
+
+
+    function handleImageUpload(event) {
+        const file = event.target.files[0]; 
+        const imageErrorElem = document.getElementById("image-error");
+        const previewContainer = document.getElementById("preview-container");
+        const previewImage = document.getElementById("preview-image");
+    
+        if (file) {
+            const validImageTypes = ["image/jpeg", "image/png", "image/gif"];
+            if (validImageTypes.includes(file.type)) {
+                imageErrorElem.textContent = ""; 
+    
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result; 
+                    previewContainer.style.display = "block"; 
+                };
+                reader.readAsDataURL(file); 
+            } else {
+                imageErrorElem.textContent = "يجب رفع صورة بصيغة JPG أو PNG أو GIF.";
+                previewContainer.style.display = "none"; 
+                event.target.value = ""; 
+            }
+        }
+    }
+
+</script>
+
+{% endblock %}

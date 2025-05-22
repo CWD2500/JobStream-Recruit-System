@@ -1,0 +1,1251 @@
+{% extends "layouts/basic.html" %}
+{% load static %}
+{% block content %}
+
+    <!-- Navbar Start -->
+    {% include "layouts/navbar.html" %}
+
+    <style>
+        #profileImage {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%; 
+            transition: transform 0.3s ease; 
+        }
+    
+        #profileImage:hover {
+            transform: scale(1.1); 
+        }
+    
+        .image-tooltip {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+            display: none; 
+            opacity: 0;
+            transition: opacity 0.3s ease, bottom 0.3s ease;
+        }
+    
+        .me-3:hover .image-tooltip {
+            display: block;
+            opacity: 1;
+            bottom: 10px;
+        }
+    
+        .card.shadow-sm {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); 
+            transition: box-shadow 0.3s ease;
+        }
+    
+
+        .card.shadow-sm:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+        }
+    
+        .card-title:hover, .card-subtitle:hover {
+            color: #28a745;
+            transform: translateY(-3px);
+        }
+    
+        .card-link:hover {
+            color: #28a745;
+            text-decoration: underline;
+        }
+    
+        .info-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+        }
+    
+        .info-list li {
+            width: 48%;
+            margin: 8px 1%;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+    
+        .info-list li:hover {
+            color: rgb(0, 129, 17);
+            transform: scale(1.05);
+        }
+    
+        .custom-card {
+            border-radius: 12px;
+            transition: box-shadow 0.3s ease-in-out, transform 0.3s ease;
+            color: #28a745;
+        }
+    
+        .custom-card-header {
+            color: rgb(0, 80, 33);
+            font-weight: bold;
+            padding: 15px;
+        }
+    
+        .custom-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+    
+        .custom-btn {
+            transition: all 0.3s ease-in-out;
+            padding: 12px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            width: 200px;
+            text-align: center;
+        }
+    
+        .custom-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+    
+        .btn-outline-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+    
+        .btn-outline-secondary:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+    
+        .btn-outline-success:hover {
+            background-color: #28a745;
+            color: white;
+        }
+    
+        .btn-outline-info:hover {
+            background-color: #17a2b8;
+            color: white;
+        }
+    
+        .form-floating {
+            position: relative;
+            margin-bottom: 20px;
+        }
+    
+        .form-floating input,
+        .form-floating select,
+        .form-floating textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #ffffff;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+    
+        .form-floating input:focus,
+        .form-floating select:focus,
+        .form-floating textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
+            outline: none;
+        }
+    
+        .form-floating label {
+            position: absolute;
+            left: 14px;
+            top: 14px;
+            font-size: 16px;
+            color: #ffffff;
+            padding: 0 8px;
+            width: 140px;
+            height: 10px;
+            transition: all 0.3s ease;
+        }
+    
+        .form-floating input:focus + label,
+        .form-floating select:focus + label,
+        .form-floating textarea:focus + label,
+        .form-floating input:not(:placeholder-shown) + label,
+        .form-floating select:not(:placeholder-shown) + label,
+        .form-floating textarea:not(:placeholder-shown) + label {
+            top: -14px;
+            left: 12px;
+            font-size: 17px;
+            color:rgb(0, 121, 0);
+        }
+    
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+    
+        .form-group {
+            flex: 1 1 calc(50% - 20px);
+            min-width: 300px;
+        }
+    
+        .form-group.full-width {
+            flex: 1 1 100%;
+        }
+    
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 20px;
+        }
+    
+        .btn-submit,
+        .btn-cancel {
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            width: 48%;
+            transition: all 0.3s ease;
+        }
+    
+        .btn-submit {
+            /* background-color: #3498db; */
+            color: white;
+        }
+    
+        .btn-cancel {
+            background-color: #f1f1f1;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+    
+        .btn-cancel:hover {
+            background-color: #e1e1e1;
+            color: #888;
+        }
+    
+        .form-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, rgba(52, 152, 219, 1) 0%, rgba(46, 204, 113, 1) 100%);
+            border-radius: 10px;
+            z-index: -1;
+        }
+    
+        .table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            max-height: 400px;
+            overflow-y: auto; 
+        }
+    
+        .table thead {
+            background-color: #343a40;
+            color: white;
+        }
+    
+        .table th,
+        .table td {
+            padding: 10px 12px;
+            text-align: center;
+            font-size: 14px;
+            border: 1px solid #ddd;
+        }
+    
+        .table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+    
+        .table tbody tr:nth-child(even) {
+            background-color: #f1f1f1;
+        }
+    
+        .table tbody {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    
+        .table a.btn {
+            margin: 5px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            text-align: center;
+            display: inline-block;
+        }
+    
+        .table a.btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+    
+        .table a.btn-danger:hover {
+            background-color: #c82333;
+        }
+    
+        .table a.btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+    
+        .table a.btn-success:hover {
+            background-color: #218838;
+        }
+    
+        .table a.btn-outline-info {
+            border: 1px solid #17a2b8;
+            color: #17a2b8;
+            background-color: transparent;
+        }
+    
+        .table a.btn-outline-info:hover {
+            background-color: #17a2b8;
+            color: white;
+        }
+    
+        .table tbody tr:hover {
+            background-color: #ddd;
+        }
+    
+        .edit-form-container {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+    
+        .edit-form-container.show {
+            opacity: 1;
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+    
+        @keyframes slideIn {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    
+        .edit-card {
+            border-radius: 10px;
+        }
+    
+        .edit-card-header {
+            border-top-right-radius: 10px;
+            border-top-left-radius: 10px;
+        }
+    
+        .edit-form-group {
+            margin-bottom: 20px;
+        }
+    
+        .edit-form-control {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    
+        .edit-btn {
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+    
+        .edit-btn:hover {
+            background-color: #007bff;
+            transform: scale(1.05);
+        }
+    
+        .edit-form-container.hide {
+            display: none;
+            opacity: 0;
+        }
+    </style>
+    
+
+
+<style>
+
+    .custom-card {
+        width: 100%;
+        max-width: 40rem;
+        border-radius: 15px; 
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        margin-top: 20px;
+        padding: 15px;
+    }
+
+    .company-image {
+        width: 100%;
+        max-width: 120px;
+        height: auto;
+        border-radius: 10px;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .card-subtitle {
+        font-size: 1rem;
+        color: #777;
+    }
+
+    ul li {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    ul li b {
+        color: #555;
+    }
+
+    .mt-4 {
+        margin-top: 20px;
+    }
+
+    .custom-btn {
+        padding: 8px 15px;
+        font-size: 14px;   
+        border-radius: 25px;
+        text-align: center;
+        transition: background-color 0.3s ease;
+        display: inline-block;
+        margin-right: 8px; 
+        margin-bottom: 10px; 
+    }
+
+    .custom-btn:hover {
+        opacity: 0.8;
+    }
+
+    .btn-outline-primary {
+        border-color: #007bff;
+        color: #007bff;
+    }
+
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+
+    .btn-outline-success {
+        border-color: #28a745;
+        color: #28a745;
+    }
+
+    .btn-outline-info {
+        border-color: #17a2b8;
+        color: #17a2b8;
+    }
+
+    .custom-btn i {
+        margin-left: 6px; 
+    }
+</style>
+
+
+
+<style>
+.custom-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 90rem;
+    width: 100%;
+    margin-right: 20px;
+    
+}
+
+/* تخصيص الحقول */
+.form-floating {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.form-floating label {
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #6c757d;
+    background-color: #fff;
+    padding: 0 5px;
+}
+
+input, select, textarea {
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    width: 100%;
+    font-size: 1rem;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.btn {
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+    opacity: 0.9;
+}
+
+.error-msg {
+    color: red;
+    font-size: 14px;
+    margin-top: -10px;
+}
+
+.table th {
+    background-color: #222; 
+    color: #fff; /
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+    border-bottom: 3px solid #444; 
+}
+
+
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f2f2f2; 
+}
+
+.table-striped tbody tr:nth-child(even) {
+    background-color: #ffffff; /* أبيض */
+}
+
+.table-bordered td, .table-bordered th {
+    border: 2px solid #444; /* حدود أغمق */
+}
+
+.table tbody tr:hover {
+    background-color: #ddd; 
+    transition: 0.3s;
+}
+
+.table td {
+    color: #222; 
+    font-size: 16px;
+    text-align: center;
+    padding: 10px;
+}
+
+
+    .form-group {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+    }
+
+    .form-group .form-floating {
+        flex: 1 0 48%; 
+        margin-right: 2%; 
+    }
+
+    .form-group .form-floating:last-child {
+        margin-right: 0;
+    }
+
+    @media (max-width: 767px) {
+        .form-group .form-floating {
+            flex: 1 0 100%;  
+            margin-right: 0; 
+        }
+    }
+
+
+</style>
+
+ <!-- Searching    -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="إغلاق"></button> 
+            </div>
+            <div class="modal-body">
+                <form method="GET" action="{% url 'job-search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" name="query" placeholder="ابحث عن الوظيفة..." aria-label="بحث" value="{{ query }}">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  <!--  end Searching    -->
+
+
+    <div class="container  mt-3" style="direction: rtl;">
+        <div class="row">
+            <div class="col-sm-12 col-md-8 col-lg-8">
+                <div class="card custom-card " style="height: 357px;">
+                    <div class="card-body">
+                        <a   href="{%  url 'employer-edit'   employer_profile.slug  %}"  class=""  style="float: inline-end;">    تعديل   </a>
+                        <div class="row">
+                            <div class="col-md-4">
+                                {% if employer_profile.logo   %}
+                                <img src="{{ employer_profile.logo.url   }}" alt="Company Image" class="company-image" width="200px" height="200px">
+                                {% else %}
+                                <img src="{% static 'img/download.png' %}" alt="Company Image" class="company-image">
+                                {%  endif %}
+                            </div>
+                            <div class="col-md-8">
+                                <h5 class="card-title mt-4">{{ employer_profile.company_name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ employer_profile.user.email }}</h6>
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <div class="row">
+                                <ul class="col-md-6 list-unstyled">
+                                    
+                                    <li>اسم الشركة: <b> {{employer_profile.company_name}}</b></li>
+                                    <li>اسم المسؤول: <b>{{employer_profile.name_of_responsible_person}}</b></li>
+                                    <li>الدولة: <b>{{employer_profile.state}} </b></li>
+                                </ul>
+                                <ul class="col-md-6 list-unstyled">
+                           
+                                    <li>المحافظة: <b> {{employer_profile.governorate}}</b></li>
+                                    <li>رقم الهاتف: <b> {{employer_profile.phone_number}}</b></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="card border-light mb-3 custom-card" style="max-width: 20rem;height: 355px;">
+                    <div class="card-header text-center text-primary custom-card-header">
+                        <i class="fa fa-cogs"></i> الإعدادات
+                    </div>
+                    <div class="card-body text-dark">
+                        <p>
+                            <a href="#" class="btn btn-outline-primary btn-block custom-btn" id="addAdButton">
+                                <i class="fa fa-plus-circle"></i> إضافة إعلان
+                            </a>
+                        </p>
+                        <p>
+                            <a href="#" class="btn btn-outline-secondary btn-block custom-btn" id="toggleJobsButton">
+                                <i class="fa fa-briefcase"></i> عرض الوظائف
+                            </a>
+                        </p>
+                        <p>
+                            <a href="#" class="btn btn-outline-success btn-block custom-btn" id="viewJobRequestsButton">
+                                <i class="fa fa-list-alt"></i> عرض طلبات التوظيف
+                            </a>
+                        </p>
+                        <p>
+                            <a href="#" class="btn btn-outline-info btn-block custom-btn" id="viewStatsButton">
+                                <i class="fa fa-chart-line"></i> إحصائيات الوظائف
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    </div>
+    
+
+
+ 
+<div class="container-fluid mt-4" style="direction: rtl;">
+
+    <div class="row" style="width: 80rem;">
+        <div class="justify-content-center" id="addAdFormContainer" style="display: none; border-radius: 10px;">
+            <div class="card custom-card">
+                <div class="card-header text-white bg-primary text-center" style="border-radius: 10px;">
+                    <b>إضافة إعلان جديد</b>
+                </div>
+                <div class="card-body" >
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <!-- نموذج المعلومات الأساسية -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.job_category }}
+                                        <label for="id_job_category">المسمى الوظيفي *</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.title }}
+                                        <label for="title">اسم الوظيفية *</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.education }}
+                                        <label for="id_education">مستوى التعليم *</label>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.career_level }}
+                                        <label for="id_career_level">المستوى الوظيفي *</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.years_of_experience_from }}
+                                        <label for="id_years_of_experience_from">سنوات الخبرة من *</label>
+                                    </div>
+                                    <div id="experience-error" class="error-msg">
+                                        <b>سنوات الخبرة (من) يجب أن تكون أصغر من سنوات الخبرة (إلى) ويجب أن تكون الأرقام موجبة.</b>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.years_of_experience_to }}
+                                        <label for="id_years_of_experience_to">سنوات الخبرة إلى *</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.salary }}
+                                        <label for="id_salary">الراتب *</label>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.career_type }}
+                                        <label for="id_career_type">نوع الوظيفي *</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.email }}
+                                        <label for="id_email">البريد الإلكتروني *</label>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.phone_number }}
+                                        <label for="id_phone_number">رقم الهاتف *</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.publication_date }}
+                                        <label for="id_publication_date">تاريخ النشر *</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.closing_date }}
+                                        <label for="id_closing_date">تاريخ الإغلاق *</label>
+                                    </div>
+                                </div>
+                                <div class="error-msg">
+                                        <p id="date-error" style="color: red; display: none;"> يجب أن يكون تاريخ الإغلاق أكبر من تاريخ النشر!</p>
+                                    </div>
+                            </div>
+                        </div>
+    
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.location }}
+                                        <label for="id_location">الموقع *</label>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.gender }}
+                                        <label for="id_gender">النوع الاجتماعي *</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- حقل الوصف الوظيفي منفصل -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="form-floating">
+                                        {{ form.job_description }}
+                                        <label for="id_job_description">الوصف الوظيفي *</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary w-100" id="submit-btn" disabled>إضافة</button>
+                            <!-- <button type="button" class="btn btn-secondary w-50">إلغاء</button> -->
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
+        
+    <!-- الوظائف المنشورة -->
+<!-- الوظائف المنشورة -->
+<div id="publishedJobsSection" class="m-5 justify-content-center " style="direction: rtl;display: none;" >
+    <h3>الوظائف المنشورة</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>الرقم</th>
+                <!-- <th>المسؤول عن الإعلان</th> -->
+                <th> فئة الوظيفة  </th>
+                <th>المسمى الوظيفي</th>
+                <th>البريد الإلكتروني</th>
+                <th>الراتب</th>
+                <th>تاريخ النشر</th>
+                <th>تاريخ الإغلاق</th>
+                <th>حالة النشر</th>
+                <th>الحدث</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for items in job_published %}
+            <tr>
+                <td>{{ items.id }}</td>
+                <!-- <td>{{ items.employer }}</td> -->
+                <td>{{ items.job_category }}</td>
+                <td>{{ items.title }}</td>
+                <td>{{ items.email }}</td>
+                <td>{{ items.salary }}</td>
+                <td>{{ items.publication_date }}</td>
+                <td>{{ items.closing_date }}</td>
+                <td>تم النشر</td>
+                <td>
+      
+                 
+                    <div class="text-center">
+                        <form method="POST" action="{% url 'employer-addJob' employer_profile.slug %}" class="delete-form" data-job-id="{{ items.id }}" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete_job_id" value="{{ items.id }}">
+                            <button type="submit" class="btn btn-danger w-25 ">حذف</button>
+                        </form>
+                        <a href="{% url 'employer-job-edit' items.slug %}" class="btn btn-success w-25">تعديل</a>
+
+                    </div>
+
+                    
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+<!-- الوظائف غير المنشورة -->
+
+    <h3>الوظائف غير المنشورة</h3>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>الرقم</th>
+                <th>   فئة الوظيفة</th>
+                <th>المسمى الوظيفي</th>
+                <th>البريد الإلكتروني</th>
+                <th>الراتب</th>
+                <th>تاريخ النشر</th>
+                <th>تاريخ الإغلاق</th>
+                <th>حالة النشر</th>
+                <th>الحدث</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for items in job_not_published %}
+            <tr>
+                <td>{{ items.id }}</td>
+                <td>{{ items.job_category }}</td>
+                <td>{{ items.title }}</td>
+                <td>{{ items.email }}</td>
+                <td>{{ items.salary }}</td>
+                <td>{{ items.publication_date }}</td>
+                <td>{{ items.closing_date }}</td>
+                <td>لم يتم النشر بعد</td>
+                <td>
+                    <div class="text-center">
+                        <form method="POST" action="{% url 'employer-addJob' employer_profile.slug %}" class="delete-form" data-job-id="{{ items.id }}" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete_job_id" value="{{ items.id }}">
+                            <button type="submit" class="btn btn-danger w-25">حذف</button>
+                        </form>
+                        <a href="{% url 'employer-job-edit' items.slug %}" class="btn btn-success w-25">تعديل</a>
+                        <a href="" class="btn btn-info w-25">عرض</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- زر عرض الوظائف -->
+
+
+<!-- الوظائف غير المنشورة -->
+
+<!-- زر عرض الوظائف -->
+
+    <!-- طلبات التوظيف -->
+    <div id="jobRequestsSection" class="m-5 justify-content-center" style="display: none; direction: rtl;">
+        <h3>طلبات التوظيف</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>اسم الباحث عن العمل</th>
+                    <th>اسم الوظيفية</th>
+                    <th> البريد الالكتروني</th>
+                    <th>تاريخ التقديم </th>
+                    <th>الإجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {%  for item_job in get_application %}
+           
+                <tr>
+                    <td> {{ item_job.seeker.user.username   }} </td>
+                    <td> {{ item_job.job.title   }}</td>
+                    <td> {{ item_job.seeker.user.email }} </td>
+                    <td>  {{ item_job.create_at   }}  </td>
+                    <td>
+                    
+                        <a href="{% url 'profile-users' item_job.cv_link %}" class="btn btn-outline-info btn-sm">تفاصيل</a>
+
+                        <!-- زر قبول مع إضافة حدث -->
+                        {% if item_job.status == 'accepted' %}
+                        <a class="text-success">تم قبوله</a>
+                    {% elif item_job.status == 'rejected' %}
+                        <a class="text-danger">تم رفضه</a>
+                    {% else %}
+                        <a href="javascript:void(0);" class="btn btn-success btn-sm" onclick="updateStatus({{ item_job.id }}, 'accepted')">قبول</a>
+                        
+                        <a href="javascript:void(0);" class="btn btn-danger btn-sm" onclick="updateStatus({{ item_job.id }}, 'rejected')">رفض</a>
+                    {% endif %}
+                    
+                         <a data-id="{{ item_job.id }}" class="btn btn-outline-danger btn-sm" href="{% url 'profile-users-delete' item_job.id %}">حذف</a>
+                        
+                        
+                    </td>
+                </tr>
+                {%  endfor %}
+                
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- إحصائيات الوظائف -->
+    <div id="statsSection" class="m-5 justify-content-center" style="display: none; direction: rtl;">
+        <h3>إحصائيات الوظائف</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>المؤشر</th>
+                    <th>العدد</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>عدد الوظائف المنشورة</td>
+                    <td>{{job_count_free}}</td>
+                </tr>
+                <tr>
+                    <td>عدد الوظائف الغير منشورة </td>
+                    <td>{{job_count_not_free}}</td>
+                </tr>
+                <tr>
+                    <td>عدد المتقدمين للوظائف</td>
+                    <td>{{get_application_count}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</div>
+    
+
+
+
+
+
+
+   
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // ========== التحكم في عرض الأقسام ==========
+    document.getElementById('addAdButton').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('addAdFormContainer').style.display = 'block';
+        // document.getElementById('jobsSection').style.display = 'none';
+        document.getElementById('jobRequestsSection').style.display = 'none';
+        // document.getElementById('statsSection').style.display = 'none';
+        document.getElementById('publishedJobsSection').style.display = 'none';
+    });
+
+    document.getElementById('toggleJobsButton').addEventListener('click', function(event) {
+        event.preventDefault();
+        // document.getElementById('jobsSection').style.display = 'block';
+        document.getElementById('publishedJobsSection').style.display = 'block';
+        document.getElementById('addAdFormContainer').style.display = 'none';
+        document.getElementById('jobRequestsSection').style.display = 'none';
+        document.getElementById('statsSection').style.display = 'none';
+    });
+
+    document.getElementById('viewJobRequestsButton').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('jobRequestsSection').style.display = 'block';
+        document.getElementById('addAdFormContainer').style.display = 'none';
+        document.getElementById('publishedJobsSection').style.display = 'none';
+        document.getElementById('statsSection').style.display = 'none';
+    });
+
+    document.getElementById('viewStatsButton').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.getElementById('statsSection').style.display = 'block';
+        document.getElementById('addAdFormContainer').style.display = 'none';
+
+        document.getElementById('jobRequestsSection').style.display = 'none';
+        document.getElementById('publishedJobsSection').style.display = 'none';
+    });
+
+    
+
+
+
+
+
+
+//     document.getElementById("toggleJobsButton").addEventListener("click", function () {
+//     let publishedJobs = document.getElementById("publishedJobsSection");
+//     let notPublishedJobs = document.getElementById("notPublishedJobsSection");
+
+//     if (publishedJobs.style.display === "none") {
+//         publishedJobs.style.display = "block";
+//         notPublishedJobs.style.display = "block";
+//     } else {
+//         publishedJobs.style.display = "none";
+//         notPublishedJobs.style.display = "none";
+//     }
+// });
+
+    // ========== التحقق من صحة التواريخ ==========
+    const publicationDate = document.getElementById('id_publication_date');
+    const closingDate = document.getElementById('id_closing_date');
+    const dateError = document.getElementById('date-error');
+    const form = document.querySelector('form');
+
+    function parseDate(input) {
+        if (!input) return null;
+        return new Date(input.replace(/-/g, '/'));
+    }
+
+    function validateDates() {
+        const pubDate = parseDate(publicationDate.value);
+        const closeDate = parseDate(closingDate.value);
+
+        if (pubDate && closeDate) {
+            if (closeDate <= pubDate) {
+                dateError.style.display = 'block';
+                return false;
+            } else {
+                dateError.style.display = 'none';  
+                return true;
+            }
+        }
+        return true;
+    }
+
+    publicationDate.addEventListener('input', validateDates);  
+    closingDate.addEventListener('input', validateDates);      
+
+    form.addEventListener('submit', function(event) {
+        if (!validateDates()) {
+            event.preventDefault(); 
+            alert(' تاريخ الإغلاق يجب أن يكون أكبر من تاريخ النشر!');
+        }
+    });
+
+
+    // ========== التحقق من سنوات الخبرة ==========
+    const yearsFrom = document.getElementById('id_years_of_experience_from');
+    const yearsTo = document.getElementById('id_years_of_experience_to');
+    const errorMessage = document.getElementById('experience-error');
+    const submitBtn = document.getElementById('submit-btn');
+    const experienceForm = document.getElementById('experience-form');
+
+    function validateExperience() {
+        const fromValue = parseInt(yearsFrom.value) || 0;
+        const toValue = parseInt(yearsTo.value) || 0;
+
+        if (fromValue <= 0 || toValue <= 0 || fromValue >= toValue) {
+            errorMessage.style.display = 'block';  
+            submitBtn.disabled = true;  
+            return false;
+        } else {
+            errorMessage.style.display = 'none';  
+            submitBtn.disabled = false;  
+            return true;
+        }
+    }
+
+    yearsFrom.addEventListener('input', validateExperience); 
+    yearsTo.addEventListener('input', validateExperience);    
+
+    experienceForm.addEventListener('submit', function(event) {
+        if (!validateExperience()) {
+            event.preventDefault();
+        }
+    });
+
+    // ========== حذف الوظائف باستخدام AJAX ==========
+    const deleteForms = document.querySelectorAll('.delete-form');
+
+    deleteForms.forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const jobId = formData.get('delete_job_id');
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    form.closest('tr').remove();
+                    alert('تم حذف الوظيفة بنجاح!');
+                } else {
+                    alert('حدث خطأ أثناء الحذف. حاول مرة أخرى.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('حدث خطأ، يرجى المحاولة لاحقًا.');
+            });
+        });
+    });
+
+});
+
+
+function updateStatus(applicationId, status) {
+            fetch(`/update-application-status/${applicationId}/${status}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('تم تحديث الطلب بنجاح!');
+                    location.reload();  
+                } else {
+                    alert(data.error);  // إذا حصل خطأ
+                }
+            });
+        }
+
+
+    </script>
+    
+    <!-- Footer Start -->
+    {% include "layouts/footer.html" %}
+    
+{%  endblock   %}
