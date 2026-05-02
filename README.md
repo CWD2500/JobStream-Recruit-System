@@ -1,6 +1,9 @@
 
 # # 💼 JobStream-Recruit-System
 **An advanced recruitment engine built on a 12-table MySQL architecture[cite: 1].**
+[![Python](https://img.shields.io/badge/Python-3.8-blue?style=for-the-badge&logo=python)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Framework-Django%204.2-092e20?style=for-the-badge&logo=django)](https://www.djangoproject.com/)
+[![JavaScript](https://img.shields.io/badge/Frontend-JS%20%26%20Bootstrap-yellow?style=for-the-badge&logo=javascript)](https://getbootstrap.com/)
 
 ### 🌟 Project Overview
 JobStream is a digital platform designed to bridge the gap between talent and employers through a structured technical environment[cite: 1]. The system manages the entire recruitment lifecycle using 12 interconnected tables[cite: 1].
