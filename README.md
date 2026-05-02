@@ -28,7 +28,7 @@ The project’s backbone is a sophisticated **Relational Database Management Sys
 ### 🖼️ Conceptual Diagram
 The following diagram illustrates the complex relationships between users, job entities, and the notification engine:
 
-![Conceptual Diagram](./docs/conceptual-diagram.png)
+![Conceptual Diagram](./docs/conceptual-diagram.jpg)
 
 *Key Engineering Highlights:*
 * **Multi-Entity Seeker Profiles**: Normalized tables for Education, Experience, Skills, and Certificates[cite: 1].
