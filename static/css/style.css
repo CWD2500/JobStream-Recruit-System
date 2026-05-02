@@ -6,12 +6,14 @@
     --dark: #2B3940;
 }
 
-.back-to-top {
+.back-to-topS {
     position: fixed;
     display: none;
     right: 45px;
     bottom: 45px;
     z-index: 99;
+    /* margin-top: -108px; */
+
 }
 
 

@@ -83,7 +83,14 @@
                     <ul class="list-unstyled">
                         <li><i class="fa fa-angle-right text-primary me-2"></i>{{ job.get_education_display }}</li>
                         <li><i class="fa fa-angle-right text-primary me-2"></i>{{ job.get_career_level_display }}</li>
+
+                    {% if job.years_of_experience_from == 0 %}
+                        <li><i class="fa fa-angle-right text-primary me-2"></i>سنوات الخبرة:  غير مطلوبة </li>
+                    {% else %}
+                        
                         <li><i class="fa fa-angle-right text-primary me-2"></i>سنوات الخبرة: من {{ job.years_of_experience_from }} إلى {{ job.years_of_experience_to }}</li>
+                    {% endif %}
+
                         <li><i class="fa fa-angle-right text-primary me-2"></i>الجنس: {{ job.get_gender_display }}</li>
                     </ul>
                 </div>

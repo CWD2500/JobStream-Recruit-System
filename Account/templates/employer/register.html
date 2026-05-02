@@ -151,20 +151,23 @@
                     <div class="text-danger" id="stateError"></div>
                 </div>
 
+             
+                 <!-- كلمة المرور -->
+                      <div class="form-floating mb-3">
+                          <input type="password" id="password" name="password" class="form-control" placeholder="كلمة المرور *" required>
+                          <label for="password">كلمة المرور *</label>
+                          <div class="text-danger" id="passwordError"></div>
+                      </div>
+             
                 <!-- المحافظة -->
                 <div class="form-floating mb-3">
                     <input type="text" id="governorate" name="governorate" class="form-control" value="{{ form.governorate.value|default:'' }}" placeholder="المحافظة *" required>
                     <label for="governorate">المحافظة *</label>
                     <div class="text-danger" id="governorateError"></div>
                 </div>
+               
 
             
-          <!-- كلمة المرور -->
-                <div class="form-floating mb-3">
-                    <input type="password" id="password" name="password" class="form-control" placeholder="كلمة المرور *" required>
-                    <label for="password">كلمة المرور *</label>
-                    <div class="text-danger" id="passwordError"></div>
-                </div>
 
                 <!-- تأكيد كلمة المرور -->
                 <div class="form-floating mb-3">
@@ -178,7 +181,7 @@
                 <button type="submit" class="btn btn-primary w-100" id="submitBtn">إنشاء الحساب</button>
             </div>
             <a href="{% url 'logins' %}" class="link-underline-success text-bold mt-3" style="text-decoration: underline;color: blue;">هل لديك حساب؟ تسجيل الدخول</a><br>
-            <a href="{%  url 'home' %}" class="link-underline-success text-bold" style="text-decoration: underline;color: rgb(0, 0, 0);">الصفحة الرئيسية</a>
+            <a href="{%  url 'home' %}" class=" link-underline-success text-bold" style="text-decoration: underline;color: rgb(0, 0, 0);">الصفحة الرئيسية</a>
         </form>
     </div>
 </div>

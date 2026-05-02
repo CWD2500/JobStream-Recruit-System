@@ -1,0 +1,36 @@
+# --- Python & Django ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+db.sqlite3
+db.sqlite3-journal
+
+# --- Sensitive Settings ---
+Job/local_settings.py
+.env
+
+# --- Virtual Environments ---
+venv/
+env/
+ENV/
+bin/
+lib/
+develop-eggs/
+dist/
+downloads/
+eggs/
+include/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+
+# --- Media & Static (Optional) ---
+media/
+# static/  
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
