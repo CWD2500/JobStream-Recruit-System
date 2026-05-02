@@ -67,5 +67,4 @@ To maintain professional standards, the system enforces the following:
 * **Analysis Tools**: Use Case, Activity, Class, and Conceptual Diagrams[cite: 1]
 * **Communication**: Integrated Email & In-app Notification Engine[cite: 1]
 
----
-**Developed with Engineering Precision by Muhammed Soliman**
+
