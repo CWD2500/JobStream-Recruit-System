@@ -66,5 +66,3 @@ To maintain professional standards, the system enforces the following:
 * **Database**: MySQL (12 Interconnected Tables)[cite: 1]
 * **Analysis Tools**: Use Case, Activity, Class, and Conceptual Diagrams[cite: 1]
 * **Communication**: Integrated Email & In-app Notification Engine[cite: 1]
-
-
